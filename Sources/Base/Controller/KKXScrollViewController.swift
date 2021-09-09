@@ -1,0 +1,122 @@
+//
+//  KKXScrollViewController.swift
+//  KKXMobile
+//
+//  Created by ming on 2021/5/10.
+//
+
+import UIKit
+
+open class KKXScrollViewController: KKXViewController {
+
+    // MARK: -------- Properties --------
+        
+    public let scrollView = UIScrollView()
+    
+    /// 子视图加载contentView上，固定高度时，可以直接设置contentView的高度约束
+    public let contentView = UIView()
+    
+    /// contentView的四周边距
+    public var contentInset: UIEdgeInsets = .zero {
+        didSet {
+            contentViewTop?.constant = contentInset.top
+            contentViewLeft?.constant = contentInset.left
+            contentViewBottom?.constant = -contentInset.bottom
+            contentViewRight?.constant = -contentInset.right
+        }
+    }
+    
+    // MARK: -------- Private Properties --------
+        
+    private var contentViewTop: NSLayoutConstraint?
+    private var contentViewLeft: NSLayoutConstraint?
+    private var contentViewBottom: NSLayoutConstraint?
+    private var contentViewRight: NSLayoutConstraint?
+        
+    // MARK: -------- View Life Cycle --------
+ 
+    open override func viewDidLoad() {
+        super.viewDidLoad()
+        configureSubviews()
+    }
+    
+    open override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        addKeyboardObserver()
+    }
+    
+    open override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        removeKeyboardObserver()
+    }
+    
+    // MARK: -------- Configuration --------
+        
+    private func configureSubviews() {
+        
+        // ScrollView
+        scrollView.keyboardDismissMode = .interactive
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(scrollView)
+        
+        let scrollViewAttributes: [NSLayoutConstraint.Attribute] = [.top, .left, .bottom, .right]
+        for attr in scrollViewAttributes {
+            NSLayoutConstraint(item: scrollView, attribute: attr, relatedBy: .equal, toItem: view, attribute: attr,  multiplier: 1.0, constant: 0).isActive = true
+        }
+        
+        
+        // ContentView
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.addSubview(contentView)
+
+        contentViewTop = NSLayoutConstraint(item: contentView, attribute: .top, relatedBy: .equal, toItem: scrollView, attribute: .top,  multiplier: 1.0, constant: 0)
+        contentViewTop?.isActive = true
+        contentViewLeft = NSLayoutConstraint(item: contentView, attribute: .left, relatedBy: .equal, toItem: scrollView, attribute: .left,  multiplier: 1.0, constant: 0)
+        contentViewLeft?.isActive = true
+        contentViewBottom = NSLayoutConstraint(item: contentView, attribute: .bottom, relatedBy: .equal, toItem: scrollView, attribute: .bottom,  multiplier: 1.0, constant: 0)
+        contentViewBottom?.isActive = true
+        contentViewRight = NSLayoutConstraint(item: contentView, attribute: .right, relatedBy: .equal, toItem: scrollView, attribute: .right,  multiplier: 1.0, constant: 0)
+        contentViewRight?.isActive = true
+        let contentViewCenterX = NSLayoutConstraint(item: contentView, attribute: .centerX, relatedBy: .equal, toItem: scrollView, attribute: .centerX,  multiplier: 1.0, constant: 0)
+        contentViewCenterX.priority = UILayoutPriority(rawValue: 999)
+        contentViewCenterX.isActive = true
+        
+        
+        // 点击隐藏键盘手势
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(kkxTapAction))
+        scrollView.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc private func kkxTapAction() {
+        view.endEditing(true)
+    }
+}
+
+extension KKXScrollViewController: KKXKeyboardShowHide {
+    
+    public var aScrollView: UIScrollView {
+        scrollView
+    }
+}
+
+extension KKXScrollViewController: KKXAdjustmentBehavior {
+    
+    public var kkxAdjustsScrollViewInsets: Bool {
+        get {
+            if #available(iOS 11.0, *) {
+                return scrollView.contentInsetAdjustmentBehavior != .never
+            }
+            else {
+                return automaticallyAdjustsScrollViewInsets
+            }
+        }
+        set {
+            if #available(iOS 11.0, *) {
+                scrollView.contentInsetAdjustmentBehavior = newValue ? .automatic:.never
+            }
+            else {
+                automaticallyAdjustsScrollViewInsets = newValue
+            }
+        }
+    }
+}
