@@ -7,7 +7,7 @@
 
 import UIKit
 
-open class KKXScrollViewController: KKXViewController {
+open class KKXScrollViewController: KKXViewController, UIGestureRecognizerDelegate {
 
     // MARK: -------- Properties --------
         
@@ -26,6 +26,8 @@ open class KKXScrollViewController: KKXViewController {
         }
     }
     
+    public let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(kkxTapAction))
+
     // MARK: -------- Private Properties --------
         
     private var contentViewTop: NSLayoutConstraint?
@@ -83,12 +85,19 @@ open class KKXScrollViewController: KKXViewController {
         
         
         // 点击隐藏键盘手势
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(kkxTapAction))
-        scrollView.addGestureRecognizer(tapGesture)
+        tapGestureRecognizer.delegate = self
+        scrollView.addGestureRecognizer(tapGestureRecognizer)
     }
     
     @objc private func kkxTapAction() {
         view.endEditing(true)
+    }
+    
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        if touch.view == scrollView || touch.view == contentView {
+            return true
+        }
+        return false
     }
 }
 
