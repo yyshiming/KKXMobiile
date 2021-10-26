@@ -21,10 +21,10 @@ extension UIImage {
     /// - Returns: 渐变图片
     public class func gradient(with size: CGSize,
                                colors: [Any]? = nil,
-                               startPoint: CGPoint = CGPoint(x: 0.5, y: 0.0),
-                               endPoint: CGPoint = CGPoint(x: 0.5, y: 1.0),
+                               startPoint: CGPoint = .init(x: 0.5, y: 0.0),
+                               endPoint: CGPoint = .init(x: 0.5, y: 1.0),
                                locations: [CGFloat]? = nil,
-                               type: CAGradientLayerType = CAGradientLayerType(rawValue: "axial")) -> UIImage? {
+                               type: CAGradientLayerType = .init(rawValue: "axial")) -> UIImage? {
         UIGraphicsBeginImageContextWithOptions(size, true, 0.0)
         let context = UIGraphicsGetCurrentContext()
         context?.saveGState()
