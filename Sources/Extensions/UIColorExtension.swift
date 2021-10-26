@@ -23,7 +23,7 @@ extension UIColor {
     }
     
     /// 单色转换为image
-    public func image(_ size: CGSize, radius: CGFloat = 0) -> UIImage? {
+    public func image(_ size: CGSize = .init(width: 1.0, height: 1.0), radius: CGFloat = 0) -> UIImage? {
         let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
         UIGraphicsBeginImageContextWithOptions(rect.size, false, 0);
         guard let context = UIGraphicsGetCurrentContext() else {
