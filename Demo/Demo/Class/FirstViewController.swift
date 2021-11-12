@@ -18,6 +18,7 @@ class FirstViewController: KKXViewController, KKXCustomSearchView {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        print(Bundle.main.bundleIdentifier ?? "")
         navigationItem.title = "TextField"
                 
         moveView

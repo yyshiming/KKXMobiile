@@ -8,7 +8,7 @@
 import UIKit
 import MachO
 
-public func registerSignalHandler() {
+private func registerSignalHandler() {
     // OC捕获异常
     // NSSetUncaughtExceptionHandler(uncaughtExceptionHandler(_:))
     
@@ -32,7 +32,7 @@ public func registerSignalHandler() {
     //    signal(SIGPIPE, signalExceptionHandler)
 }
 
-public func unregisterSignalHandler() {
+private func unregisterSignalHandler() {
     signal(SIGABRT, SIG_DFL)
     signal(SIGSEGV, SIG_DFL)
     signal(SIGBUS, SIG_DFL)
@@ -40,7 +40,7 @@ public func unregisterSignalHandler() {
     signal(SIGILL, SIG_DFL)
 }
 
-public func crashReportPath() -> String? {
+private func crashReportPath() -> String? {
     if let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
         let reportPath = "\(path)/Crashs"
         if !FileManager.default.fileExists(atPath: reportPath) {
@@ -51,7 +51,7 @@ public func crashReportPath() -> String? {
     return nil
 }
 
-public func getCrashReportPaths() -> [String] {
+private func getCrashReportPaths() -> [String] {
     guard let crashPath = crashReportPath() else {
         return []
     }
@@ -70,7 +70,7 @@ public func getCrashReportPaths() -> [String] {
     return []
 }
 
-public func getCrashReportContents() -> [String] {
+private func getCrashReportContents() -> [String] {
     var contents: [String] = []
     let paths = getCrashReportPaths()
     for path in paths {
@@ -145,7 +145,7 @@ private func deviceInfo(_ dateString: String) -> [String] {
     return [
         dateString,
         bundle.displayName + " " + "\(bundle.version)(\(bundle.build))",
-        bundle.bundleIdentifier,
+        bundle.bundleId,
         UIDevice.current.machineType,
         UIDevice.current.model,
         UIDevice.current.systemName + " " + UIDevice.current.systemVersion

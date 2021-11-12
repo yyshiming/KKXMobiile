@@ -61,23 +61,24 @@ extension UIImage {
     
     /// 在图片中绘制文字
     /// - Parameters:
-    ///   - text: 文字，String 或者NSAttributedString
-    ///   - rect: 绘制区域
+    ///   - infos: String 、NSAttributedString、UIImage
     /// - Returns: 绘制完成的图片
-    public func drawText(_ text: Any, in rect: CGRect) -> UIImage? {
+    public func drawText(_ infos: [(Any, CGRect)]) -> UIImage? {
         // 不要用UIGraphicsBeginImageContext(_ size: CGSize)，不然图片会模糊
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
         draw(in: CGRect(x: 0, y: 0, width: size.width, height: size.height))
         
-        var attributedString: NSAttributedString?
-        if text is NSAttributedString {
-            attributedString = text as? NSAttributedString
-        } else if let string = text as? String {
-            attributedString = NSAttributedString(string: string)
-        } else {
-            return nil
+        for info in infos {
+            if let attrString = info.0 as? NSAttributedString {
+                attrString.draw(in: info.1)
+            } else if let str = info.0 as? String {
+                NSAttributedString(string: str).draw(in: info.1)
+            } else if let image = info.0 as? UIImage {
+                image.draw(in: info.1)
+            } else {
+                break
+            }
         }
-        attributedString?.draw(in: rect)
         
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
