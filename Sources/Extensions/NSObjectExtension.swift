@@ -8,7 +8,8 @@
 import UIKit
 
 // MARK: - ======== InputDelegate ========
-public protocol InputDelegate: AnyObject {
+
+public protocol InputDelegate: NSObjectProtocol {
     
     var inputResponders: [UIView?] { get }
     
@@ -21,7 +22,6 @@ public protocol InputDelegate: AnyObject {
     func inputDidFocusNextStep()
     
     func inputDoneButtonAction()
-    func inputDatePickerValueChanged(_ datePicker: UIDatePicker)
 }
 
 extension InputDelegate {
@@ -39,27 +39,18 @@ extension InputDelegate {
     public func inputDatePickerValueChanged(_ datePicker: UIDatePicker) { }
 }
 
-public enum InputAccessoryBarStyle {
-    /// 取消  完成
-    case `default`
-    
-    /// 完成
-    case done
-    
-    /// 上一个 下一个  完成
-    case stepArrow
-    case stepText
+// MARK: - ======== DatePickerDelegate ========
+
+public protocol DatePickerDelegate: NSObjectProtocol {
+    var kkxDatePicker: UIDatePicker { get }
+    func inputDatePickerValueChanged(_ datePicker: UIDatePicker)
 }
 
-extension NSObject {
-    
-    private weak var kkxInputDelegate: InputDelegate? {
-        return self as? InputDelegate
-    }
-    
+extension DatePickerDelegate {
     /// UITextField().inputView = datePicker
-    public var datePicker: UIDatePicker {
-        if let datePicker = objc_getAssociatedObject(self, &datePickerKey) as? UIDatePicker {
+    /// 年月 datePickerMode = UIDatePicker.Mode(rawValue: 4269)!
+    public var kkxDatePicker: UIDatePicker {
+        if let datePicker = objc_getAssociatedObject(self, &kkxDatePickerKey) as? UIDatePicker {
             return datePicker
         }
         else {
@@ -78,15 +69,73 @@ extension NSObject {
             
             let datePicker = UIDatePicker()
             datePicker.datePickerMode = .date
-            datePicker.addTarget(self, action: #selector(kkxValueChanged(_:)), for: .valueChanged)
+            datePicker.addTarget(kkxDatePickerHandler, action: #selector(kkxDatePickerHandler.kkxValueChanged(_:)), for: .valueChanged)
             if #available(iOS 13.4, *) {
                 datePicker.preferredDatePickerStyle = .wheels
-//                datePicker.frame.size.height = 410
             }
-            objc_setAssociatedObject(self, &datePickerKey, datePicker, .OBJC_ASSOCIATION_RETAIN)
+            objc_setAssociatedObject(self, &kkxDatePickerKey, datePicker, .OBJC_ASSOCIATION_RETAIN)
             return datePicker
         }
     }
+    
+    private var kkxDatePickerHandler: DatePickerDelegateHander {
+        guard let handler = objc_getAssociatedObject(self, &kkxDatePickerHandlerKey) as? DatePickerDelegateHander else {
+            let newHandler = DatePickerDelegateHander(delegate: self)
+            objc_setAssociatedObject(self, &kkxDatePickerHandlerKey, newHandler, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            return newHandler
+        }
+        return handler
+    }
+    func inputDatePickerValueChanged(_ datePicker: UIDatePicker) { }
+}
+private var kkxDatePickerKey: UInt8 = 0
+private var kkxDatePickerHandlerKey: UInt8 = 0
+
+fileprivate class DatePickerDelegateHander: NSObject {
+    
+    init(delegate: DatePickerDelegate?) {
+        self.delegate = delegate
+    }
+    weak var delegate: DatePickerDelegate?
+    
+    @objc func kkxValueChanged(_ datePicker: UIDatePicker) {
+        delegate?.inputDatePickerValueChanged(datePicker)
+    }
+}
+
+
+// MARK: - ======== DatePickerDelegate ========
+
+public enum InputAccessoryBarStyle {
+    /// 取消  完成
+    case `default`
+    
+    /// 完成
+    case done
+    
+    /// 上一个 下一个  完成
+    case stepArrow
+    case stepText
+}
+
+public protocol AccessoryBarDelegate: InputDelegate {
+    
+    var inputAccessoryBar: UIToolbar { get }
+    
+    var accessoryBarStyle: InputAccessoryBarStyle { get set }
+    
+    var kkxFirstResponder: UIView? { get set }
+    
+    var inputCancelItem: UIBarButtonItem { get }
+    
+    var inputDoneItem: UIBarButtonItem { get }
+    
+    var previousStepItem: UIBarButtonItem { get }
+    
+    var nextStepItem: UIBarButtonItem { get }
+}
+
+extension AccessoryBarDelegate {
     
     /// UITextField().inputAccessoryView = inputAccessoryBar
     public var inputAccessoryBar: UIToolbar {
@@ -154,8 +203,17 @@ extension NSObject {
     
     public var inputCancelItem: UIBarButtonItem {
         guard let item = objc_getAssociatedObject(self, &inputCancelItemKey) as? UIBarButtonItem else {
-            let item = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(kkxInputCancelAction))
+            let item = UIBarButtonItem(barButtonSystemItem: .cancel, target: kkxAccessoryBarHandler, action: #selector(kkxAccessoryBarHandler.kkxInputCancelAction))
             objc_setAssociatedObject(self, &inputCancelItemKey, item, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            return item
+        }
+        return item
+    }
+    
+    public var inputDoneItem: UIBarButtonItem {
+        guard let item = objc_getAssociatedObject(self, &inputDoneItemKey) as? UIBarButtonItem else {
+            let item = UIBarButtonItem(barButtonSystemItem: .done, target: kkxAccessoryBarHandler, action: #selector(kkxAccessoryBarHandler.kkxDoneAction))
+            objc_setAssociatedObject(self, &inputDoneItemKey, item, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             return item
         }
         return item
@@ -163,7 +221,7 @@ extension NSObject {
     
     public var previousStepItem: UIBarButtonItem {
         guard let item = objc_getAssociatedObject(self, &previousStepItemKey) as? UIBarButtonItem else {
-            let item = UIBarButtonItem(title: KKXExtensionString("previous.step"), style: .plain, target: self, action: #selector(kkxPreviousStepAction))
+            let item = UIBarButtonItem(title: KKXExtensionString("previous.step"), style: .plain, target: kkxAccessoryBarHandler, action: #selector(kkxAccessoryBarHandler.kkxPreviousStepAction))
             item.tintColor = .kkxAccessoryBar
             objc_setAssociatedObject(self, &previousStepItemKey, item, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             return item
@@ -173,7 +231,7 @@ extension NSObject {
     
     public var nextStepItem: UIBarButtonItem {
         guard let item = objc_getAssociatedObject(self, &nextStepItemKey) as? UIBarButtonItem else {
-            let item = UIBarButtonItem(title: KKXExtensionString("next.step"), style: .plain, target: self, action: #selector(kkxNextStepAction))
+            let item = UIBarButtonItem(title: KKXExtensionString("next.step"), style: .plain, target: kkxAccessoryBarHandler, action: #selector(kkxAccessoryBarHandler.kkxNextStepAction))
             item.tintColor = .kkxAccessoryBar
             objc_setAssociatedObject(self, &nextStepItemKey, item, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             return item
@@ -181,21 +239,66 @@ extension NSObject {
         return item
     }
     
-    public var inputDoneItem: UIBarButtonItem {
-        guard let item = objc_getAssociatedObject(self, &rinputDoneItemKey) as? UIBarButtonItem else {
-            let item = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(kkxDoneAction))
-            objc_setAssociatedObject(self, &rinputDoneItemKey, item, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-            return item
+    private var kkxAccessoryBarHandler: AccessoryBarDelegateHander {
+        guard let handler = objc_getAssociatedObject(self, &kkxAccessoryBarHanderKey) as? AccessoryBarDelegateHander else {
+            let newHandler = AccessoryBarDelegateHander(delegate: self)
+            objc_setAssociatedObject(self, &kkxAccessoryBarHanderKey, newHandler, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            return newHandler
         }
-        return item
+        return handler
+    }
+}
+private var inputAccessoryBarKey: UInt8 = 0
+private var inputAccessoryBarStyleKey: UInt8 = 0
+private var theFirstResponderKey: UInt8 = 0
+private var inputCancelItemKey: UInt8 = 0
+private var inputDoneItemKey: UInt8 = 0
+private var previousStepItemKey: UInt8 = 0
+private var nextStepItemKey: UInt8 = 0
+private var kkxAccessoryBarHanderKey: UInt8 = 0
+
+fileprivate class AccessoryBarDelegateHander: NSObject {
+    
+    init(delegate: AccessoryBarDelegate?) {
+        self.delegate = delegate
+    }
+    weak var delegate: AccessoryBarDelegate?
+    
+    @objc func kkxInputCancelAction() {
+        if let view = delegate as? UIView {
+            view.endEditing(true)
+        } else if let viewController = delegate as? UIViewController {
+            viewController.view.endEditing(true)
+        }
+        delegate?.inputCancelButtonAction()
     }
     
-    // MARK: -------- Actions --------
+    @objc func kkxPreviousStepAction() {
+        delegate?.inputWillFocusPreviousStep()
+        kkxFocusPreviousResponder()
+        delegate?.inputDidFocusPreviousStep()
+    }
     
-    public func kkxFocusPreviousResponder() {
-        if let responder = kkxFirstResponder,
+    @objc func kkxNextStepAction() {
+        delegate?.inputWillFocusNextStep()
+        kkxFocusNextResponder()
+        delegate?.inputDidFocusNextStep()
+    }
+    
+    @objc func kkxDoneAction() {
+        if let view = delegate as? UIView {
+            view.endEditing(true)
+        } else if let viewController = delegate as? UIViewController {
+            viewController.view.endEditing(true)
+        }
+        delegate?.kkxFirstResponder = nil
+        delegate?.inputDoneButtonAction()
+    }
+    
+    func kkxFocusPreviousResponder() {
+        if let responder = delegate?.kkxFirstResponder,
             responder.isFirstResponder,
-            let inputResponders = kkxInputDelegate?.inputResponders,
+            let inputResponders = delegate?.inputResponders,
             let index = inputResponders.firstIndex(of: responder),
             index > 0 {
             
@@ -203,10 +306,10 @@ extension NSObject {
         }
     }
     
-    public func kkxFocusNextResponder() {
-        if let responder = kkxFirstResponder,
+    func kkxFocusNextResponder() {
+        if let responder = delegate?.kkxFirstResponder,
             responder.isFirstResponder,
-            let inputResponders = kkxInputDelegate?.inputResponders,
+            let inputResponders = delegate?.inputResponders,
             let index = inputResponders.firstIndex(of: responder) {
             
             if index < inputResponders.count - 1 {
@@ -216,52 +319,7 @@ extension NSObject {
             }
         }
     }
-    
-    @objc private func kkxInputCancelAction() {
-        if let view = self as? UIView {
-            view.endEditing(true)
-        } else if let viewController = self as? UIViewController {
-            viewController.view.endEditing(true)
-        }
-        kkxInputDelegate?.inputCancelButtonAction()
-    }
-    
-    @objc private func kkxPreviousStepAction() {
-        kkxInputDelegate?.inputWillFocusPreviousStep()
-        kkxFocusPreviousResponder()
-        kkxInputDelegate?.inputDidFocusPreviousStep()
-    }
-    
-    @objc private func kkxNextStepAction() {
-        kkxInputDelegate?.inputWillFocusNextStep()
-        kkxFocusNextResponder()
-        kkxInputDelegate?.inputDidFocusNextStep()
-    }
-    
-    @objc private func kkxDoneAction() {
-        if let view = self as? UIView {
-            view.endEditing(true)
-        } else if let viewController = self as? UIViewController {
-            viewController.view.endEditing(true)
-        }
-        kkxFirstResponder = nil
-        kkxInputDelegate?.inputDoneButtonAction()
-    }
-    
-    @objc private func kkxValueChanged(_ datePicker: UIDatePicker) {
-        kkxInputDelegate?.inputDatePickerValueChanged(datePicker)
-    }
-    
 }
-private var datePickerKey: UInt8 = 0
-private var inputAccessoryBarKey: UInt8 = 0
-private var inputAccessoryBarStyleKey: UInt8 = 0
-private var theFirstResponderKey: UInt8 = 0
-private var inputCancelItemKey: UInt8 = 0
-private var previousStepItemKey: UInt8 = 0
-private var nextStepItemKey: UInt8 = 0
-private var rinputDoneItemKey: UInt8 = 0
-
 
 // MARK: - ======== Observations ========
 

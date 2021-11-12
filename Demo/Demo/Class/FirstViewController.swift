@@ -7,7 +7,7 @@
 
 import UIKit
 
-class FirstViewController: KKXViewController, KKXCustomSearchView {
+class FirstViewController: KKXViewController, KKXCustomSearchView, AccessoryBarDelegate {
 
     private let moveView = UIView()
     
