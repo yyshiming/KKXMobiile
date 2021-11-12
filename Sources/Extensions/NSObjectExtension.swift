@@ -43,7 +43,7 @@ extension InputDelegate {
 
 public protocol DatePickerDelegate: NSObjectProtocol {
     var kkxDatePicker: UIDatePicker { get }
-    func inputDatePickerValueChanged(_ datePicker: UIDatePicker)
+    func kkxDatePickerValueChanged(_ datePicker: UIDatePicker)
 }
 
 extension DatePickerDelegate {
@@ -86,7 +86,7 @@ extension DatePickerDelegate {
         }
         return handler
     }
-    func inputDatePickerValueChanged(_ datePicker: UIDatePicker) { }
+    public func kkxDatePickerValueChanged(_ datePicker: UIDatePicker) { }
 }
 private var kkxDatePickerKey: UInt8 = 0
 private var kkxDatePickerHandlerKey: UInt8 = 0
@@ -99,7 +99,7 @@ fileprivate class DatePickerDelegateHander: NSObject {
     weak var delegate: DatePickerDelegate?
     
     @objc func kkxValueChanged(_ datePicker: UIDatePicker) {
-        delegate?.inputDatePickerValueChanged(datePicker)
+        delegate?.kkxDatePickerValueChanged(datePicker)
     }
 }
 
