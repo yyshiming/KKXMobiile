@@ -11,18 +11,18 @@ import UserNotifications
 /// 当前设备屏与对应的设备，屏幕宽度比例
 struct Scale {
     
-    /// 当前设备屏与iPhone6，屏幕宽度比例
-    public static let iPhone6 = UIScreen.main.bounds.width/375.0
+    /// 当前设备屏与iPhoneX，屏幕宽度比例
+    public static let iPhoneX = UIScreen.main.bounds.width/375.0
 }
 
 public func kkxFit(_ x: CGFloat) -> CGFloat {
-    return x * Scale.iPhone6
+    return x * Scale.iPhoneX
 }
 
 extension CGFloat {
     
     public var kkxFit: CGFloat {
-        return self * Scale.iPhone6
+        return self * Scale.iPhoneX
     }
 }
 
@@ -41,14 +41,6 @@ public var kkxKeyWindow: UIWindow? {
     UIApplication.shared.keyWindow
 }
 
-public func kkxCall(_ phoneNumber: String) {
-    if let url = URL(string: "telprompt://" + phoneNumber) {
-        if UIApplication.shared.canOpenURL(url) {
-            UIApplication.shared.open(url)
-        }
-    }
-}
-
 /// keyWindow安全区域
 ///
 ///     状态栏没有隐藏时
@@ -59,9 +51,17 @@ public func kkxCall(_ phoneNumber: String) {
 public var kkxWindowSafeAreaInsets: UIEdgeInsets {
     var insets: UIEdgeInsets = .zero
     if #available(iOS 11.0, *) {
-        insets = UIApplication.shared.keyWindow?.safeAreaInsets ?? .zero
+        insets = kkxKeyWindow?.safeAreaInsets ?? .zero
     }
     return insets
+}
+
+public func kkxCall(_ phoneNumber: String) {
+    if let url = URL(string: "telprompt://" + phoneNumber) {
+        if UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url)
+        }
+    }
 }
 
 /// 注册推送通知

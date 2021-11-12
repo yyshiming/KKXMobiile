@@ -9,7 +9,7 @@ import UIKit
 
 extension Bundle {
     
-    public var bundleIdentifier: String {
+    public var bundleId: String {
         return Bundle.main.infoDictionary?["CFBundleIdentifier"] as? String ?? ""
     }
     
