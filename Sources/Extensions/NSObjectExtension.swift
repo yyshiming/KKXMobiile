@@ -133,6 +133,10 @@ public protocol AccessoryBarDelegate: InputDelegate {
     var previousStepItem: UIBarButtonItem { get }
     
     var nextStepItem: UIBarButtonItem { get }
+    
+    func kkxFocusPreviousResponder()
+    
+    func kkxFocusNextResponder()
 }
 
 extension AccessoryBarDelegate {
