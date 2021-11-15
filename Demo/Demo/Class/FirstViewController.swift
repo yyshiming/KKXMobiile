@@ -7,7 +7,7 @@
 
 import UIKit
 
-class FirstViewController: KKXViewController, KKXCustomSearchView, AccessoryBarDelegate {
+class FirstViewController: KKXViewController, KKXCustomSearchView, AccessoryBarDelegate, DatePickerDelegate {
 
     private let moveView = UIView()
     
@@ -43,6 +43,7 @@ class FirstViewController: KKXViewController, KKXCustomSearchView, AccessoryBarD
         textField.onTextChanged { newText in
             print("textField text did changed: ", newText)
         }
+        textField.inputView = kkxDatePicker
         textField.inputAccessoryView = inputAccessoryBar
         textField.rightView = rightView
         textField.rightViewMode = .always

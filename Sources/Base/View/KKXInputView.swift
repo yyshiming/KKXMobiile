@@ -1,14 +1,14 @@
 //
-//  KKXInputLabel.swift
-//  KKXMobile
+//  KKXInputView.swift
+//  Demo
 //
-//  Created by ming on 2021/5/11.
+//  Created by ming on 2021/11/12.
 //
 
 import UIKit
 
-open class KKXInputLabel: UILabel {
-    
+open class KKXInputView: UIView {
+
     open override var inputView: UIView? {
         get { _inputView }
         set {

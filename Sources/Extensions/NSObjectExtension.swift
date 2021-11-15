@@ -201,6 +201,14 @@ extension AccessoryBarDelegate {
         }
     }
     
+    public func kkxFocusPreviousResponder() {
+        kkxAccessoryBarHandler.kkxFocusPreviousResponder()
+    }
+    
+    public func kkxFocusNextResponder() {
+        kkxAccessoryBarHandler.kkxFocusNextResponder()
+    }
+    
     public var inputCancelItem: UIBarButtonItem {
         guard let item = objc_getAssociatedObject(self, &inputCancelItemKey) as? UIBarButtonItem else {
             let item = UIBarButtonItem(barButtonSystemItem: .cancel, target: kkxAccessoryBarHandler, action: #selector(kkxAccessoryBarHandler.kkxInputCancelAction))
