@@ -75,15 +75,15 @@ extension UITextView {
     
     private var placeholderLabel: UILabel {
         guard let label = objc_getAssociatedObject(self, &placeholderLabelKey) as? UILabel else {
-            textContainerInset = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 5.0)
-            textContainer.lineFragmentPadding = 0
             
-            let pointSize: CGFloat = 16
-            font = .systemFont(ofSize: pointSize)
+            if font == nil {
+                let pointSize: CGFloat = 16
+                font = .systemFont(ofSize: pointSize)
+            }
             
             let label = UILabel()
             label.numberOfLines = 0
-            label.font = .systemFont(ofSize: pointSize)
+            label.font = font
             addSubview(label)
             objc_setAssociatedObject(self, &placeholderLabelKey, label, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             

@@ -72,7 +72,6 @@
 		3AEF2439265CFCCE006FA9D4 /* KKXScanViewStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEF2431265CFCCE006FA9D4 /* KKXScanViewStyle.swift */; };
 		3AEF243A265CFCCE006FA9D4 /* KKXScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEF2432265CFCCE006FA9D4 /* KKXScanViewController.swift */; };
 		3AEF243B265CFCCE006FA9D4 /* KKXScanWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEF2433265CFCCE006FA9D4 /* KKXScanWrapper.swift */; };
-		3AEF24EE2660A263006FA9D4 /* KKXTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEF24ED2660A263006FA9D4 /* KKXTextView.swift */; };
 		3AEF24F02660C708006FA9D4 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 3AEF24EF2660C708006FA9D4 /* README.md */; };
 		3AEF24F32660C916006FA9D4 /* PhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEF24F22660C916006FA9D4 /* PhotoViewController.swift */; };
 		3AEF24F52660E102006FA9D4 /* CrashReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEF24F42660E101006FA9D4 /* CrashReport.swift */; };
@@ -153,7 +152,6 @@
 		3AEF2431265CFCCE006FA9D4 /* KKXScanViewStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KKXScanViewStyle.swift; sourceTree = "<group>"; };
 		3AEF2432265CFCCE006FA9D4 /* KKXScanViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KKXScanViewController.swift; sourceTree = "<group>"; };
 		3AEF2433265CFCCE006FA9D4 /* KKXScanWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KKXScanWrapper.swift; sourceTree = "<group>"; };
-		3AEF24ED2660A263006FA9D4 /* KKXTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KKXTextView.swift; sourceTree = "<group>"; };
 		3AEF24EF2660C708006FA9D4 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
 		3AEF24F22660C916006FA9D4 /* PhotoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewController.swift; sourceTree = "<group>"; };
 		3AEF24F42660E101006FA9D4 /* CrashReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrashReport.swift; sourceTree = "<group>"; };
@@ -271,7 +269,6 @@
 				3AFCF1A4264A4B070026B5EB /* KKXTableViewCell.swift */,
 				3AFCF1AC264A64AC0026B5EB /* KKXTextField.swift */,
 				3A071EDE26676DFC00AC5221 /* KKXTextLabelView.swift */,
-				3AEF24ED2660A263006FA9D4 /* KKXTextView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -476,7 +473,6 @@
 				3AFCF1A0264A46C30026B5EB /* ObjectWrapper.swift in Sources */,
 				3AFCF19E264A2DBE0026B5EB /* KKXPreferences.swift in Sources */,
 				3AA117892649199F0093551B /* TimerExtension.swift in Sources */,
-				3AEF24EE2660A263006FA9D4 /* KKXTextView.swift in Sources */,
 				3AA1178D264924880093551B /* UICollectionViewCellExtension.swift in Sources */,
 				3AFCF19B264A22540026B5EB /* BundleExtension.swift in Sources */,
 				3AA11791264926260093551B /* UIColorExtension.swift in Sources */,
