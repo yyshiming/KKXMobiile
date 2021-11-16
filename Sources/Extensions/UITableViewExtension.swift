@@ -13,6 +13,7 @@ extension UITableView {
     /// 注册复用Cell
     /// - Parameter cellClass: 类型
     public func kkx_register<T: UITableViewCell>(_ cellClass: T.Type) {
+        
         let identifier = String(describing: cellClass)
         register(T.self, forCellReuseIdentifier: identifier)
     }
@@ -20,6 +21,7 @@ extension UITableView {
     /// 从nib注册复用Cell
     /// - Parameter cellClass: 类型
     public func kkx_register<T: UITableViewCell>(_ nib: UINib?, forCellClass cellClass: T.Type) {
+        
         let identifier = String(describing: cellClass)
         register(nib, forCellReuseIdentifier: identifier)
     }
@@ -27,6 +29,7 @@ extension UITableView {
     /// 复用cell
     /// - Parameter cellClass: 类型
     public func kkx_dequeueReusableCell<T: UITableViewCell>(_ cellClass: T.Type) -> T {
+       
         let identifier = String(describing: cellClass)
         guard let cell = dequeueReusableCell(withIdentifier: identifier) as? T else {
             fatalError("Couldn't find UITableViewCell for \(identifier), make sure the cell is registered with table view")
@@ -36,9 +39,7 @@ extension UITableView {
     
     /// 复用cell
     /// - Parameter cellClass: 类型
-    public func kkx_dequeueReusableCell<T: UITableViewCell>(
-        _ cellClass: T.Type,
-        for indexPath: IndexPath) -> T {
+    public func kkx_dequeueReusableCell<T: UITableViewCell>(_ cellClass: T.Type, for indexPath: IndexPath) -> T {
         
         let identifier = String(describing: cellClass)
         guard let cell = dequeueReusableCell(withIdentifier: identifier, for: indexPath) as? T else {
@@ -49,9 +50,8 @@ extension UITableView {
     
     /// 从Nib注册复用header、footer
     /// - Parameter viewClass: 类型
-    public func kkx_register<T: UITableViewHeaderFooterView>(
-        _ nib: UINib?,
-        forHeaderFooterViewClass viewClass: T.Type) {
+    public func kkx_register<T: UITableViewHeaderFooterView>(_ nib: UINib?, forHeaderFooterViewClass viewClass: T.Type) {
+        
         let identifier = String(describing: viewClass)
         register(nib, forHeaderFooterViewReuseIdentifier: identifier)
     }
@@ -59,6 +59,7 @@ extension UITableView {
     /// 注册复用header、footer
     /// - Parameter viewClass: 类型
     public func kkx_register<T: UITableViewHeaderFooterView>(_ viewClass: T.Type) {
+        
         let identifier = String(describing: viewClass)
         register(T.self, forHeaderFooterViewReuseIdentifier: identifier)
     }
@@ -66,6 +67,7 @@ extension UITableView {
     /// 复用HeaderFooter
     /// - Parameter viewClass: 类型
     public func kkx_dequeueReusableHeaderFooterView<T: UITableViewHeaderFooterView>(_ viewClass: T.Type) -> T {
+        
         let identifier = String(describing: viewClass)
         guard let headerFooterView = dequeueReusableHeaderFooterView(withIdentifier: identifier) as? T else {
             fatalError("Couldn't find UITableViewHeaderFooterView for \(identifier), make sure the view is registered with table view")
@@ -88,8 +90,9 @@ extension UITableView {
     
     /// 获取cell高度，
     /// 只适合用在 accessoryType = .none，cell autolayout 的时候
-    public func kkx_cellAutolayoutHeight<T: UITableViewCell>(_ cellClass: T.Type, for key: String, contentWidth: CGFloat, configuration: ((T) -> Void)) -> CGFloat {
+    public func kkx_cellAutolayoutHeight<T: UITableViewCell>(_ cellClass: T.Type, for indexPath: IndexPath, contentWidth: CGFloat, configuration: ((T) -> Void)) -> CGFloat {
         
+        let key = "\(indexPath.section)_\(indexPath.item)"
         guard shouldKeepCaches, let height = cellHeightCaches[key] else {
             let templateKey = String(describing: cellClass) + ".templete.autolayout"
             let cell = kkx_templateCell(cellClass, for: templateKey)
@@ -108,8 +111,9 @@ extension UITableView {
     
     /// 获取cell高度，重写UIView的kkxTotalHeight，返回高度
     /// 只适合用在 accessoryType = .none， 的时候
-    public func kkx_cellHeight<T: UITableViewCell>(_ cellClass: T.Type, for key: String, contentWidth: CGFloat, configuration: ((T) -> Void)) -> CGFloat {
+    public func kkx_cellHeight<T: UITableViewCell>(_ cellClass: T.Type, for indexPath: IndexPath, contentWidth: CGFloat, configuration: ((T) -> Void)) -> CGFloat {
         
+        let key = "\(indexPath.section)_\(indexPath.item)"
         guard shouldKeepCaches, let height = cellHeightCaches[key] else {
             let templateKey = String(describing: cellClass) + ".templete"
             let cell = kkx_templateCell(cellClass, for: templateKey)
@@ -143,10 +147,10 @@ extension UITableView {
     }
     
     /// 获取header footer高度，用在使用autolayout的header，footer
-    public func kkx_headerFooterAutolayoutHeight<T: UITableViewHeaderFooterView>(_ viewClass: T.Type, for key: String, contentWidth: CGFloat, configuration: ((T) -> Void)) -> CGFloat {
+    public func kkx_headerFooterAutolayoutHeight<T: UITableViewHeaderFooterView>(_ viewClass: T.Type, for indexPath: IndexPath, contentWidth: CGFloat, configuration: ((T) -> Void)) -> CGFloat {
         
-        let height = headerHeightCaches[key]
-        guard shouldKeepCaches, let cacheHeight = height else {
+        let key = "\(indexPath.section)_\(indexPath.item)"
+        guard shouldKeepCaches, let cacheHeight = headerHeightCaches[key] else {
             let templateKey = String(describing: viewClass) + ".template.autolayout"
             let view = kkx_templateHeaderFooter(viewClass, for: templateKey)
             view.contentView.translatesAutoresizingMaskIntoConstraints = false
@@ -162,10 +166,10 @@ extension UITableView {
     }
     
     /// cell中赋值kkxTotalHeight后可以用此方法获取cell高度
-    public func kkx_headerFooterHeight<T: UITableViewHeaderFooterView>(_ viewClass: T.Type, for key: String, contentWidth: CGFloat, configuration: ((T) -> Void)) -> CGFloat {
+    public func kkx_headerFooterHeight<T: UITableViewHeaderFooterView>(_ viewClass: T.Type, for indexPath: IndexPath, contentWidth: CGFloat, configuration: ((T) -> Void)) -> CGFloat {
         
-        let height = headerHeightCaches[key]
-        guard shouldKeepCaches, let cacheHeight = height else {
+        let key = "\(indexPath.section)_\(indexPath.item)"
+        guard shouldKeepCaches, let cacheHeight = headerHeightCaches[key] else {
             let templateKey = String(describing: viewClass) + ".template"
             let view = kkx_templateHeaderFooter(viewClass, for: templateKey)
             view.frame.size.width = contentWidth
@@ -194,7 +198,6 @@ extension UITableView {
         let bottomOffset = CGPoint(x: 0, y: contentSize.height - bounds.size.height)
         setContentOffset(bottomOffset, animated: animated)
     }
-    
 }
 
 // MARK: - ======== swizzle ========

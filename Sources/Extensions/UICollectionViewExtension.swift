@@ -13,6 +13,7 @@ extension UICollectionView {
     /// 从Nib注册复用Cell
     /// - Parameter cellClass: 类型
     public func kkx_registerFromNib<T: UICollectionViewCell>(_ cellClass: T.Type) {
+        
         let identifier = String(describing: cellClass)
         register(UINib(nibName: identifier, bundle: nil), forCellWithReuseIdentifier: identifier)
     }
@@ -21,6 +22,7 @@ extension UICollectionView {
     /// - Parameter nib: Nib
     /// - Parameter cellClass: 类型
     public func kkx_register<T: UICollectionViewCell>(_ nib: UINib?, forCellWithClass cellClass: T.Type) {
+        
         let identifier = String(describing: cellClass)
         register(nib, forCellWithReuseIdentifier: identifier)
     }
@@ -28,6 +30,7 @@ extension UICollectionView {
     /// 注册复用Cell
     /// - Parameter cellClass: 类型
     public func kkx_register<T: UICollectionViewCell>(_ cellClass: T.Type) {
+        
         let identifier = String(describing: cellClass)
         register(T.self, forCellWithReuseIdentifier: identifier)
     }
@@ -36,34 +39,28 @@ extension UICollectionView {
     /// - Parameter viewClass: 类型
     /// - Parameter kind: kind
     public func kkx_register<T: UICollectionReusableView>(_ viewClass: T.Type, forSupplementaryViewOfKind kind: String) {
+        
         let identifier = String(describing: viewClass)
-        register(T.self,
-                 forSupplementaryViewOfKind: kind,
-                 withReuseIdentifier: identifier)
+        register(T.self, forSupplementaryViewOfKind: kind, withReuseIdentifier: identifier)
     }
     
     /// 从Nib注册ReusableView
     /// - Parameter kind: kind
     /// - Parameter viewClass: 类型
     public func kkx_registerFromNib<T: UICollectionReusableView>(_ viewClass: T.Type, forSupplementaryViewOfKind kind: String) {
+       
         let identifier = String(describing: viewClass)
-        register(UINib(nibName: identifier, bundle: nil),
-                 forSupplementaryViewOfKind: kind,
-                 withReuseIdentifier: identifier)
+        register(UINib(nibName: identifier, bundle: nil), forSupplementaryViewOfKind: kind, withReuseIdentifier: identifier)
     }
     
     /// 从Nib注册ReusableView
     /// - Parameter nib: Nib
     /// - Parameter kind: kind
     /// - Parameter viewClass: 类型
-    public  func kkx_register<T: UICollectionReusableView>(
-        _ nib: UINib?,
-        forSupplementaryViewOfKind kind: String,
-        withViewClass viewClass: T.Type) {
+    public  func kkx_register<T: UICollectionReusableView>(_ nib: UINib?, forSupplementaryViewOfKind kind: String, withViewClass viewClass: T.Type) {
+        
         let identifier = String(describing: viewClass)
-        register(nib,
-                 forSupplementaryViewOfKind: kind,
-                 withReuseIdentifier: identifier)
+        register(nib, forSupplementaryViewOfKind: kind, withReuseIdentifier: identifier)
     }
     
     /// 获取复用cell
@@ -82,10 +79,7 @@ extension UICollectionView {
     /// - Parameter viewClass: 类型
     /// - Parameter kind: kind
     /// - Parameter indexPath: indexPath
-    public func kkx_dequeueReusableSupplementaryView<T: UICollectionReusableView>(
-        _ viewClass: T.Type,
-        ofKind kind: String,
-        for indexPath: IndexPath) -> T {
+    public func kkx_dequeueReusableSupplementaryView<T: UICollectionReusableView>(_ viewClass: T.Type, ofKind kind: String, for indexPath: IndexPath) -> T {
         
         let identifier = String(describing: viewClass)
         guard let cell = dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: identifier, for: indexPath) as? T else {
@@ -111,11 +105,12 @@ extension UICollectionView {
     
     /// 获取Cell高度，用在使用 AutoLayout的Cell中
     /// - Parameter cellClass: cell类型
-    /// - Parameter key: 存储计算高度模板view的key
+    /// - Parameter indexPath: indexPath
     /// - Parameter contentWidth: cell宽度约束值
     /// - Parameter configuration: 配置cell
-    public func kkx_cellAutolayoutHeight<T: UICollectionViewCell>(_ cellClass: T.Type, for key: String, contentWidth: CGFloat, configuration: ((T) -> Void)) -> CGFloat {
+    public func kkx_cellAutolayoutHeight<T: UICollectionViewCell>(_ cellClass: T.Type, for indexPath: IndexPath, contentWidth: CGFloat, configuration: ((T) -> Void)) -> CGFloat {
         
+        let key = "\(indexPath.section)_\(indexPath.item)"
         guard shouldKeepCaches, let height = cellHeightCaches[key] else {
             let templateKey = String(describing: cellClass) + ".template.autolayout"
             let cell = kkx_templateCell(cellClass, for: templateKey)
@@ -133,11 +128,12 @@ extension UICollectionView {
     
     /// cell中赋值kkxTotalHeight后可以用此方法获取cell高度
     /// - Parameter cellClass: cell类型
-    /// - Parameter key: 存储计算高度模板cell的key
+    /// - Parameter indexPath: indexPath
     /// - Parameter contentWidth: cell宽度
     /// - Parameter configuration: 配置cell
-    public func kkx_cellHeight<T: UICollectionViewCell>(_ cellClass: T.Type, for key: String, contentWidth: CGFloat, configuration: ((T) -> Void)) -> CGFloat {
+    public func kkx_cellHeight<T: UICollectionViewCell>(_ cellClass: T.Type, for indexPath: IndexPath, contentWidth: CGFloat, configuration: ((T) -> Void)) -> CGFloat {
         
+        let key = "\(indexPath.section)_\(indexPath.item)"
         guard shouldKeepCaches, let height = cellHeightCaches[key] else {
             let templateKey = String(describing: cellClass) + ".template"
             let cell = kkx_templateCell(cellClass, for: templateKey)
@@ -179,11 +175,12 @@ extension UICollectionView {
     /// 获取header footer高度，用在使用AutoLayout的header footer中
     /// - Parameter viewClass: ReusableView类型
     /// - Parameter kind: Header/Footer
-    /// - Parameter key: 存储计算高度模板view的key
+    /// - Parameter indexPath: indexPath
     /// - Parameter contentWidth: view宽度约束值
     /// - Parameter configuration: 配置view
-    public func kkx_reusableViewAutolayoutHeight<T: UICollectionReusableView>(_ viewClass: T.Type, ofKind kind: String, for key: String, contentWidth: CGFloat, configuration: ((T) -> Void)) -> CGFloat {
+    public func kkx_reusableViewAutolayoutHeight<T: UICollectionReusableView>(_ viewClass: T.Type, ofKind kind: String, for indexPath: IndexPath, contentWidth: CGFloat, configuration: ((T) -> Void)) -> CGFloat {
         
+        let key = "\(indexPath.section)_\(indexPath.item)"
         var height = headerHeightCaches[key]
         if kind == UICollectionView.elementKindSectionFooter {
             height = footerHeightCaches[key]
@@ -210,11 +207,12 @@ extension UICollectionView {
     /// cell中赋值kkxTotalHeight后可以用此方法获取cell高度
     /// - Parameter viewClass: view类型
     /// - Parameter kind: Header/Footer
-    /// - Parameter key: 存储计算高度模板view的key
+    /// - Parameter indexPath: indexPath
     /// - Parameter contentWidth: view宽度约束值
     /// - Parameter configuration: 配置view
-    public func kkx_reusableViewHeight<T: UICollectionReusableView>(_ viewClass: T.Type, ofKind kind: String, for key: String, contentWidth: CGFloat, configuration: ((T) -> Void)) -> CGFloat {
+    public func kkx_reusableViewHeight<T: UICollectionReusableView>(_ viewClass: T.Type, ofKind kind: String, for indexPath: IndexPath, contentWidth: CGFloat, configuration: ((T) -> Void)) -> CGFloat {
         
+        let key = "\(indexPath.section)_\(indexPath.item)"
         var height = headerHeightCaches[key]
         if kind == UICollectionView.elementKindSectionFooter {
             height = footerHeightCaches[key]
