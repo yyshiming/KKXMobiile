@@ -9,23 +9,23 @@ import UIKit
 
 extension Bundle {
     
-    public var bundleId: String {
+    public var kkxBundleId: String {
         return Bundle.main.infoDictionary?["CFBundleIdentifier"] as? String ?? ""
     }
     
-    public var name: String {
+    public var kkxName: String {
         return Bundle.main.infoDictionary?["CFBundleName"] as? String ?? ""
     }
     
-    public var displayName: String {
+    public var kkxDisplayName: String {
         return Bundle.main.infoDictionary?["CFBundleDisplayName"] as? String ?? ""
     }
     
-    public var version: String {
+    public var kkxVersion: String {
         return Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
     }
     
-    public var build: String {
+    public var kkxBuild: String {
         return Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? ""
     }
 }

@@ -431,12 +431,7 @@ extension NSObject {
     }
 }
 
-/// 存储计时信息的对象，可以在代理方法里面设置button标题
-///
-///     let button = UIButton(type: .custom)
-///     button.timerObject.timerCount = 60
-///     button.timerDelegate = self
-///     button.startTimer()
+/// 存储计时信息的对象
 public class TimerObject {
     
     /// 计时秒数，默认 60
@@ -485,13 +480,26 @@ public class TimerObject {
     }
 }
 
+/// 计时器代理
+///
+///     Class Object: NSObject, TimerDelegate { }
+///     let obj = Object()
+///     obj.timerObject.timerCount = 60
+///     obj.startTimer()
 public protocol TimerDelegate: AnyObject {
         
     /// 存储计时信息的对象
     var timerObject: TimerObject { get }
     
+    /// 将要开始计时回调
+    func onWillRunning(handler: @escaping (TimerDelegate) -> Void) -> Self
+    /// 计时中回调
+    func onRunning(handler: @escaping (TimerDelegate, Int) -> Void) -> Self
+    /// 计时结束回调
+    func onStoped(handler: @escaping (TimerDelegate) -> Void) -> Self
+    
     /// 开始计时
-    func startTimer(willRunning: ((TimerDelegate) -> Void)?, onRunning: ((TimerDelegate, Int) -> Void)?, onStop: ((TimerDelegate) -> Void)?)
+    func kkxStartTimer()
 }
 
 extension TimerDelegate {
@@ -505,19 +513,33 @@ extension TimerDelegate {
         return obj
     }
     
-    public func startTimer(willRunning: ((TimerDelegate) -> Void)? = nil, onRunning: ((TimerDelegate, Int) -> Void)? = nil, onStop: ((TimerDelegate) -> Void)? = nil) {
-
+    @discardableResult
+    public func onWillRunning(handler: @escaping (TimerDelegate) -> Void) -> Self {
+        willRunningHandler = handler
+        return self
+    }
+    
+    @discardableResult
+    public func onRunning(handler: @escaping (TimerDelegate, Int) -> Void) -> Self {
+        runningHandler = handler
+        return self
+    }
+    
+    @discardableResult
+    public func onStoped(handler: @escaping (TimerDelegate) -> Void) -> Self {
+        stopHandler = handler
+        return self
+    }
+    
+    public func kkxStartTimer() {
         if timerObject.isCountDown {
             return
         }
 
-        onRunningHandler = onRunning
-        onStopHandler = onStop
-
         timerObject.invalidateTimer()
         timerObject.isCountDown = true
         timerObject.isTiming = true
-        willRunning?(self)
+        willRunningHandler?(self)
 
         let timer = Timer.kkxTimer(timeInterval: 1.0, repeats: true, block: { [weak self](timer) in
             self?.timerFired(timer)
@@ -525,7 +547,7 @@ extension TimerDelegate {
         RunLoop.current.add(timer, forMode: .common)
         timerObject.timer = timer
 
-        onRunningHandler?(self, timerObject.currentCount)
+        runningHandler?(self, timerObject.currentCount)
     }
     
     private func timerFired(_ timer: Timer) {
@@ -533,30 +555,40 @@ extension TimerDelegate {
         timerObject.currentCount -= 1
         guard timerObject.currentCount > 0 else {
             timerObject.invalidateTimer()
-            onStopHandler?(self)
+            stopHandler?(self)
             return
         }
-        onRunningHandler?(self, timerObject.currentCount)
+        runningHandler?(self, timerObject.currentCount)
     }
     
-    private var onRunningHandler: ((Self, Int) -> Void)? {
+    private var willRunningHandler: ((Self) -> Void)? {
         get {
-            objc_getAssociatedObject(self, &onRunningHandlerKey) as? (Self, Int) -> Void
+            objc_getAssociatedObject(self, &willRunningHandlerKey) as? (Self) -> Void
         }
         set {
-            objc_setAssociatedObject(self, &onRunningHandlerKey, newValue, .OBJC_ASSOCIATION_COPY_NONATOMIC)
+            objc_setAssociatedObject(self, &willRunningHandlerKey, newValue, .OBJC_ASSOCIATION_COPY_NONATOMIC)
         }
     }
     
-    private var onStopHandler: ((Self) -> Void)? {
+    private var runningHandler: ((Self, Int) -> Void)? {
         get {
-            objc_getAssociatedObject(self, &onStopHandlerKey) as? (Self) -> Void
+            objc_getAssociatedObject(self, &runningHandlerKey) as? (Self, Int) -> Void
         }
         set {
-            objc_setAssociatedObject(self, &onStopHandlerKey, newValue, .OBJC_ASSOCIATION_COPY_NONATOMIC)
+            objc_setAssociatedObject(self, &runningHandlerKey, newValue, .OBJC_ASSOCIATION_COPY_NONATOMIC)
+        }
+    }
+    
+    private var stopHandler: ((Self) -> Void)? {
+        get {
+            objc_getAssociatedObject(self, &stopHandlerKey) as? (Self) -> Void
+        }
+        set {
+            objc_setAssociatedObject(self, &stopHandlerKey, newValue, .OBJC_ASSOCIATION_COPY_NONATOMIC)
         }
     }
 }
 private var timerObjectKey: UInt8 = 0
-private var onRunningHandlerKey: UInt8 = 0
-private var onStopHandlerKey: UInt8 = 0
+private var willRunningHandlerKey: UInt8 = 0
+private var runningHandlerKey: UInt8 = 0
+private var stopHandlerKey: UInt8 = 0
