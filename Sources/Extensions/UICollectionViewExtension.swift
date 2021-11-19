@@ -175,12 +175,12 @@ extension UICollectionView {
     /// 获取header footer高度，用在使用AutoLayout的header footer中
     /// - Parameter viewClass: ReusableView类型
     /// - Parameter kind: Header/Footer
-    /// - Parameter indexPath: indexPath
+    /// - Parameter section: section
     /// - Parameter contentWidth: view宽度约束值
     /// - Parameter configuration: 配置view
-    public func kkx_reusableViewAutolayoutHeight<T: UICollectionReusableView>(_ viewClass: T.Type, ofKind kind: String, for indexPath: IndexPath, contentWidth: CGFloat, configuration: ((T) -> Void)) -> CGFloat {
+    public func kkx_reusableViewAutolayoutHeight<T: UICollectionReusableView>(_ viewClass: T.Type, ofKind kind: String, for section: Int, contentWidth: CGFloat, configuration: ((T) -> Void)) -> CGFloat {
         
-        let key = "\(indexPath.section)_\(indexPath.item)"
+        let key = "\(section)"
         var height = headerHeightCaches[key]
         if kind == UICollectionView.elementKindSectionFooter {
             height = footerHeightCaches[key]
@@ -207,12 +207,12 @@ extension UICollectionView {
     /// cell中赋值kkxTotalHeight后可以用此方法获取cell高度
     /// - Parameter viewClass: view类型
     /// - Parameter kind: Header/Footer
-    /// - Parameter indexPath: indexPath
+    /// - Parameter section: section
     /// - Parameter contentWidth: view宽度约束值
     /// - Parameter configuration: 配置view
-    public func kkx_reusableViewHeight<T: UICollectionReusableView>(_ viewClass: T.Type, ofKind kind: String, for indexPath: IndexPath, contentWidth: CGFloat, configuration: ((T) -> Void)) -> CGFloat {
+    public func kkx_reusableViewHeight<T: UICollectionReusableView>(_ viewClass: T.Type, ofKind kind: String, for section: Int, contentWidth: CGFloat, configuration: ((T) -> Void)) -> CGFloat {
         
-        let key = "\(indexPath.section)_\(indexPath.item)"
+        let key = "\(section)"
         var height = headerHeightCaches[key]
         if kind == UICollectionView.elementKindSectionFooter {
             height = footerHeightCaches[key]

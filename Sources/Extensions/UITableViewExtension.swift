@@ -9,7 +9,7 @@ import UIKit
 
 // MARK: - ======== UITableView注册、复用 ========
 extension UITableView {
-
+    
     /// 注册复用Cell
     /// - Parameter cellClass: 类型
     public func kkx_register<T: UITableViewCell>(_ cellClass: T.Type) {
@@ -147,9 +147,9 @@ extension UITableView {
     }
     
     /// 获取header footer高度，用在使用autolayout的header，footer
-    public func kkx_headerFooterAutolayoutHeight<T: UITableViewHeaderFooterView>(_ viewClass: T.Type, for indexPath: IndexPath, contentWidth: CGFloat, configuration: ((T) -> Void)) -> CGFloat {
+    public func kkx_headerFooterAutolayoutHeight<T: UITableViewHeaderFooterView>(_ viewClass: T.Type, for section: Int, contentWidth: CGFloat, configuration: ((T) -> Void)) -> CGFloat {
         
-        let key = "\(indexPath.section)_\(indexPath.item)"
+        let key = "\(section)"
         guard shouldKeepCaches, let cacheHeight = headerHeightCaches[key] else {
             let templateKey = String(describing: viewClass) + ".template.autolayout"
             let view = kkx_templateHeaderFooter(viewClass, for: templateKey)
@@ -166,9 +166,9 @@ extension UITableView {
     }
     
     /// cell中赋值kkxTotalHeight后可以用此方法获取cell高度
-    public func kkx_headerFooterHeight<T: UITableViewHeaderFooterView>(_ viewClass: T.Type, for indexPath: IndexPath, contentWidth: CGFloat, configuration: ((T) -> Void)) -> CGFloat {
+    public func kkx_headerFooterHeight<T: UITableViewHeaderFooterView>(_ viewClass: T.Type, for section: Int, contentWidth: CGFloat, configuration: ((T) -> Void)) -> CGFloat {
         
-        let key = "\(indexPath.section)_\(indexPath.item)"
+        let key = "\(section)"
         guard shouldKeepCaches, let cacheHeight = headerHeightCaches[key] else {
             let templateKey = String(describing: viewClass) + ".template"
             let view = kkx_templateHeaderFooter(viewClass, for: templateKey)
