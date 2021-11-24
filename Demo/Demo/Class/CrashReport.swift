@@ -144,8 +144,8 @@ private func deviceInfo(_ dateString: String) -> [String] {
     let bundle = Bundle.main
     return [
         dateString,
-        bundle.displayName + " " + "\(bundle.version)(\(bundle.build))",
-        bundle.bundleId,
+        bundle.kkxDisplayName + " " + "\(bundle.kkxVersion)(\(bundle.kkxBuild))",
+        bundle.kkxBundleId,
         UIDevice.current.machineType,
         UIDevice.current.model,
         UIDevice.current.systemName + " " + UIDevice.current.systemVersion
