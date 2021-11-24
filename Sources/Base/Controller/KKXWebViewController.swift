@@ -44,9 +44,12 @@ open class KKXWebViewController: KKXViewController {
             reloadRightItems()
         }
     }
-    
-    /// 加载完毕后获取web content的高度
-    public var didLoadDataHandler: ((CGFloat) -> Void)?
+    /// 是否显示底部工具view，默认true，显示
+    open var isShowToolBar: Bool = true {
+        didSet {
+            reloadWebViewFrame()
+        }
+    }
     
     open var url: URL? {
         didSet {
@@ -101,15 +104,36 @@ open class KKXWebViewController: KKXViewController {
         }
     }
     
-    /// 标题发生变化调用
-    open func titleDidChanged(_ title: String) {
-        
-    }
-    
-    public func addIntercept(with urlString: String, callback: @escaping WebViewInterceptCallback) {
+    @discardableResult
+    public func addIntercept(with urlString: String, callback: @escaping WebViewInterceptCallback) -> Self {
         _intercepts[urlString] = callback
+        return self
     }
     
+    private var _titleChangedHandler: ((String) -> Void)?
+    /// 标题发生变化调用
+    @discardableResult
+    public func onTitleChanged(handler: @escaping (String) -> Void) -> Self {
+        _titleChangedHandler = handler
+        return self
+    }
+
+    private var _getContentHeightHandler: ((WKWebView, CGFloat) -> Void)?
+    /// 加载完毕后获取web content的高度回调
+    @discardableResult
+    public func onGetContentHeight(handler: @escaping (WKWebView, CGFloat) -> Void) -> Self {
+        _getContentHeightHandler = handler
+        return self
+    }
+    
+    private var _finishedHandler: ((WKWebView) -> Void)?
+    /// 加载完成回调
+    @discardableResult
+    public func onFinished(handler: @escaping (WKWebView) -> Void) -> Self {
+        _finishedHandler = handler
+        return self
+    }
+
     // MARK: -------- Private Properties --------
 
     /// url拦截和回调
@@ -117,13 +141,17 @@ open class KKXWebViewController: KKXViewController {
     
     private var refreshItem: UIBarButtonItem!
     
-    private var toolBar: UIToolbar!
+    private let toolBar = UIToolbar()
     
     private var goBackItem: UIBarButtonItem!
     private var goForwardItem: UIBarButtonItem!
     
     private var toolBarHeight: CGFloat {
         view.kkxSafeAreaInsets.bottom + 49
+    }
+    
+    private var _isShowToolBar: Bool {
+        isShowToolBar && webView.canGoBack && webView.canGoForward
     }
     
     private var webViewTitleObservation: NSKeyValueObservation?
@@ -188,7 +216,7 @@ open class KKXWebViewController: KKXViewController {
             if let title = object.webView.title,
                object.navigationItem.title == nil {
                 object.navigationItem.title = title
-                object.titleDidChanged(title)
+                object._titleChangedHandler?(title)
             }
         }
         webViewProgressObservation = observe(\.webView.estimatedProgress) { object, _ in
@@ -217,10 +245,12 @@ open class KKXWebViewController: KKXViewController {
     }
     
     private func reloadWebViewFrame() {
+        guard isViewLoaded
+        else { return }
         
         goBackItem.isEnabled = webView.canGoBack
         goForwardItem.isEnabled = webView.canGoForward
-        toolBar.isHidden = !webView.canGoBack && !webView.canGoForward
+        toolBar.isHidden = !_isShowToolBar
         var webViewHeight = view.bounds.height
         if !toolBar.isHidden {
             let offset = -view.kkxSafeAreaInsets.bottom / 2
@@ -250,7 +280,7 @@ open class KKXWebViewController: KKXViewController {
             webView.scrollView.panGestureRecognizer.require(toFail: interactiveGesture)
         }
         
-        toolBar = UIToolbar(frame: CGRect(x: 0, y: view.bounds.height - toolBarHeight, width: view.bounds.width, height: toolBarHeight))
+        toolBar.frame = CGRect(x: 0, y: view.bounds.height - toolBarHeight, width: view.bounds.width, height: toolBarHeight)
         
         view.addSubview(webView)
         view.addSubview(toolBar)
@@ -301,6 +331,9 @@ open class KKXWebViewController: KKXViewController {
     }
     
     private func reloadRightItems() {
+        guard isViewLoaded
+        else { return }
+        
         var rightItems: [UIBarButtonItem] = []
         if showCancelItem {
             rightItems.append(kkxCancelItem)
@@ -390,18 +423,24 @@ extension KKXWebViewController: WKNavigationDelegate {
         
     }
     
+    
     /// 页面加载完成
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         if showActivity { view.kkxLoading = false }
         
         kkxPrint("webView didFinish navigation")
-        var jsString = "document.body.scrollHeight"
-        if #available(iOS 13.0, *) {
-            jsString = "document.documentElement.scrollHeight"
-        }
-        webView.evaluateJavaScript(jsString) { [weak self](height, error) in
-            if let h = height as? CGFloat {
-                self?.didLoadDataHandler?(h)
+        
+        _finishedHandler?(webView)
+        
+        if _getContentHeightHandler != nil {
+            var jsString = "document.body.scrollHeight"
+            if #available(iOS 13.0, *) {
+                jsString = "document.documentElement.scrollHeight"
+            }
+            webView.evaluateJavaScript(jsString) { [weak self](height, error) in
+                if let h = height as? CGFloat {
+                    self?._getContentHeightHandler?(webView, h)
+                }
             }
         }
     }
@@ -468,7 +507,10 @@ extension KKXWebViewController: WKUIDelegate {
     
     /// 确认框
     public func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (Bool) -> Void) {
-        
+        let action = UIAlertAction.init(title: KKXExtensionString("ok"), style: .default) { (action) in
+            completionHandler(true)
+        }
+        alert(.alert, title: nil, message: message, actions: [action])
     }
     
     /// 输入框

@@ -114,8 +114,8 @@ public class KKXEmptyDataView: UIView {
         return stackView
     }()
     
-    private var tapAction: ((KKXEmptyDataView) -> Void)?
-    private var buttonAction: ((KKXEmptyDataView) -> Void)?
+    private var tapActionHandler: ((KKXEmptyDataView) -> Void)?
+    private var buttonActionHandler: ((KKXEmptyDataView) -> Void)?
     
     // MARK: -------- Init --------
     
@@ -152,24 +152,30 @@ public class KKXEmptyDataView: UIView {
     // MARK: -------- Actions --------
     
     @objc private func handleTap() {
-        tapAction?(self)
+        tapActionHandler?(self)
     }
     
     @objc private func handleButtonTap() {
-        buttonAction?(self)
+        if let handler = buttonActionHandler {
+            handler(self)
+        } else {
+            tapActionHandler?(self)
+        }
     }
     
     // MARK: -------- Public Function --------
     
+    /// 点击回调
     @discardableResult
     public func onTap(perform action: @escaping (KKXEmptyDataView) -> Void) -> Self {
-        tapAction = action
+        tapActionHandler = action
         return self
     }
     
+    /// 按钮点击回调，默认会调用onTap的回调
     @discardableResult
     public func onButtonTap(perform action: @escaping (KKXEmptyDataView) -> Void) -> Self {
-        buttonAction = action
+        buttonActionHandler = action
         return self
     }
 }
