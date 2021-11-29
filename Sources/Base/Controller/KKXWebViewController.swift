@@ -23,6 +23,9 @@ open class KKXWebViewController: KKXViewController {
     /// 给H5界面传cookies
     open var cookies: [String: Any] = [:]
 
+    /// 用在runJavaScriptTextInputPanelWithPrompt回调方法传参数
+    open var customPrompt: [String: String] = [:]
+    
     /// 是否显示菊花动画，默认false
     open var showActivity: Bool = false
     
@@ -515,7 +518,20 @@ extension KKXWebViewController: WKUIDelegate {
     
     /// 输入框
     public func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String, defaultText: String?, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (String?) -> Void) {
-        
+        if customPrompt.keys.contains(prompt) {
+            completionHandler(customPrompt[prompt])
+        } else {
+            var inputTextField: UITextField?
+            let alertController = UIAlertController(title: prompt, message: nil, preferredStyle: .alert)
+            let action = UIAlertAction.init(title: KKXExtensionString("ok"), style: .default) { (action) in
+                completionHandler(inputTextField?.text)
+            }
+            alertController.addAction(action)
+            alertController.addTextField { textField in
+                inputTextField = textField
+            }
+            present(alertController, animated: true, completion: nil)
+        }
     }
     
     public func webView(_ webView: WKWebView, shouldPreviewElement elementInfo: WKPreviewElementInfo) -> Bool {
