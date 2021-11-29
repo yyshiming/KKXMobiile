@@ -68,7 +68,7 @@ extension UIView {
     ///   - insets: 左右边距，默认UIEdgeInsets.zero
     public func separatorLine(inset: UIEdgeInsets? = nil, color: UIColor? = nil, width: CGFloat? = nil, position: UIView.LinePosition? = nil) {
         if let newColor = color {
-            kkxLineView.backgroundColor = newColor
+            separatorLine.backgroundColor = newColor
         }
         if let newWidth = width {
             kkxLineWidth = newWidth
@@ -81,10 +81,22 @@ extension UIView {
         }
         
         reloadSeparatorLine()
+        
+        if observations["lineView.frame"] == nil {
+            observations["lineView.frame"] = observe(\.frame, options: [.new, .old]) { (object, change) in
+                guard change.newValue?.size != change.oldValue?.size else { return }
+                self.reloadSeparatorLine()
+            }
+        }
+        if observations["lineView.bounds"] == nil {
+            observations["lineView.bounds"] = observe(\.bounds) { (object, change) in
+                self.reloadSeparatorLine()
+            }
+        }
     }
     
     public var separatorLine: UIView {
-        kkxLineView
+        _separatorLine
     }
     
     private func reloadSeparatorLine() {
@@ -97,11 +109,11 @@ extension UIView {
             y = frame.height - kkxLineWidth
         }
         let width = frame.width - kkxLineInset.left - kkxLineInset.right
-        kkxLineView.frame = CGRect(x: x, y: y, width: width, height: kkxLineWidth)
+        separatorLine.frame = CGRect(x: x, y: y, width: width, height: kkxLineWidth)
     }
     
     /// 自定义line
-    private var kkxLineView: UIView {
+    private var _separatorLine: UIView {
         guard let lineView = objc_getAssociatedObject(self, &kkxLineViewKey) as? UIView else {
             let view = UIView()
             view.backgroundColor = UIColor.kkxSeparator
@@ -115,15 +127,6 @@ extension UIView {
             }
             theSuperview.addSubview(view)
             objc_setAssociatedObject(self, &kkxLineViewKey, view, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-            
-            observations["frame.lineView"] = observe(\.frame, options: [.new, .old]) { (object, change) in
-                guard change.newValue?.size != change.oldValue?.size else { return }
-                self.reloadSeparatorLine()
-            }
-            
-            observations["bounds.lineView"] = observe(\.bounds) { (object, change) in
-                self.reloadSeparatorLine()
-            }
             return view
         }
         return lineView
