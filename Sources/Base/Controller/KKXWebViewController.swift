@@ -26,6 +26,9 @@ open class KKXWebViewController: KKXViewController {
     /// 用在runJavaScriptTextInputPanelWithPrompt回调方法传参数
     open var customPrompt: [String: String] = [:]
     
+    /// 是否显示输入弹框，默认发false
+    open var showTextInputPanel = false
+    
     /// 是否显示菊花动画，默认false
     open var showActivity: Bool = false
     
@@ -521,16 +524,20 @@ extension KKXWebViewController: WKUIDelegate {
         if customPrompt.keys.contains(prompt) {
             completionHandler(customPrompt[prompt])
         } else {
-            var inputTextField: UITextField?
-            let alertController = UIAlertController(title: prompt, message: nil, preferredStyle: .alert)
-            let action = UIAlertAction.init(title: KKXExtensionString("ok"), style: .default) { (action) in
-                completionHandler(inputTextField?.text)
+            if showTextInputPanel {
+                var inputTextField: UITextField?
+                let alertController = UIAlertController(title: prompt, message: nil, preferredStyle: .alert)
+                let action = UIAlertAction.init(title: KKXExtensionString("ok"), style: .default) { (action) in
+                    completionHandler(inputTextField?.text)
+                }
+                alertController.addAction(action)
+                alertController.addTextField { textField in
+                    inputTextField = textField
+                }
+                present(alertController, animated: true, completion: nil)
+            } else {
+                completionHandler(nil)
             }
-            alertController.addAction(action)
-            alertController.addTextField { textField in
-                inputTextField = textField
-            }
-            present(alertController, animated: true, completion: nil)
         }
     }
     
