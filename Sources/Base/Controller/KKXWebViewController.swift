@@ -219,8 +219,7 @@ open class KKXWebViewController: KKXViewController {
         }
         
         webViewTitleObservation = observe(\.webView.title) { object, _ in
-            if let title = object.webView.title,
-               object.navigationItem.title == nil {
+            if let title = object.webView.title {
                 object.navigationItem.title = title
                 object._titleChangedHandler?(title)
             }
