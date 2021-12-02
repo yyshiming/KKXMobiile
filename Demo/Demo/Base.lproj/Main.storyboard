@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="9em-U7-odk">
-    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -29,7 +27,6 @@
         <!--Tab Bar Controller-->
         <scene sceneID="M0X-xJ-eWG">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dI7-iE-1RR" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <tabBarController id="9em-U7-odk" customClass="KKXTabBarController" customModule="Demo" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="3qg-JT-TMD">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="49"/>
@@ -41,6 +38,7 @@
                         <segue destination="lo2-Eg-7sf" kind="relationship" relationship="viewControllers" id="YcY-Hn-YbA"/>
                     </connections>
                 </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dI7-iE-1RR" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-2096" y="372"/>
         </scene>
@@ -63,7 +61,7 @@
             <objects>
                 <viewController id="kx2-dx-jnO" customClass="SecondViewController" customModule="Demo" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="MJX-gx-01i">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <viewLayoutGuide key="safeArea" id="xvq-FN-9zz"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -73,12 +71,12 @@
             </objects>
             <point key="canvasLocation" x="-339" y="729"/>
         </scene>
-        <!--First View Controller-->
+        <!--Main View Controller-->
         <scene sceneID="Ck6-8g-FWD">
             <objects>
-                <tableViewController id="OER-ca-MRr" customClass="FirstViewController" customModule="Demo" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="OER-ca-MRr" customClass="MainViewController" customModule="Demo" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="Vdf-0D-eGN">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <connections>
