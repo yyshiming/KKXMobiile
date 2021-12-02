@@ -11,7 +11,16 @@ open class KKXTabBarController: UITabBarController {
 
     open override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        if #available(iOS 13.0, *) {
+            let newAppearance = UITabBarAppearance()
+            newAppearance.configureWithDefaultBackground()
+            tabBar.standardAppearance = newAppearance
+            /// 适配iOS15.0，tabBar背景色消失问题
+            if #available(iOS 15.0, *) {
+                tabBar.scrollEdgeAppearance = newAppearance
+            }
+        }
         view.backgroundColor = defaultConfiguration.mainBackground
     }
     

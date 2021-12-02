@@ -7,7 +7,7 @@
 
 import UIKit
 
-open class KKXViewController: UIViewController, KKXCustomNavBar, KKXCustomBackItem {
+open class KKXViewController: UIViewController, KKXCustomNavigationBar, KKXCustomBackItem {
 
     deinit {
         kkxDeinitLog()

@@ -24,6 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         config.languageCode = "zh-Hans"
         config.isHideNavigationBarShadowImage = true
         config.navigationBarStyle = .theme
+        
 //        window = UIWindow(frame: UIScreen.main.bounds)
 //
 //        window!.makeKeyAndVisible()

@@ -28,10 +28,11 @@ extension UITextField {
                 let text = textField?.text ?? ""
                 observer.textDidChanged?(text)
             }
-            observer.observation = self.observe(\.text) { (textField, _) in
+            let observation = observe(\.text) { (textField, _) in
                 let text = textField.text ?? ""
                 observer.textDidChanged?(text)
             }
+            observer.observations.append(observation)
             return observer
         }
         return observer
@@ -45,7 +46,7 @@ public class KKXTextObservation {
         NotificationCenter.default.removeObserver(self)
     }
     
-    public var observation: NSKeyValueObservation?
+    public var observations: [NSKeyValueObservation] = []
     public var textDidChanged: ((String) -> Void)?
     private var handler: ((Notification) -> Void)?
     

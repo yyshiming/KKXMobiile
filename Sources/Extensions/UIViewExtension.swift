@@ -251,11 +251,11 @@ extension UIView {
             layer.insertSublayer(gradientLayer, at: 0)
             objc_setAssociatedObject(self, &gradientLayerKey, gradientLayer, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             
-            observations["frame.gradientLayer"] = observe(\.frame, options: [.new, .old]) { (object, change) in
+            observations["gradientLayer.frame"] = observe(\.frame, options: [.new, .old]) { (object, change) in
                 guard change.newValue?.size != change.oldValue?.size else { return }
                 gradientLayer.frame = object.bounds
             }
-            observations["bounds.gradientLayer"] = observe(\.bounds) { (object, change) in
+            observations["gradientLayer.bounds"] = observe(\.bounds) { (object, change) in
                 gradientLayer.frame = object.bounds
             }
             return gradientLayer
@@ -334,12 +334,12 @@ extension UIView {
             let shapeLayer = CAShapeLayer()
             objc_setAssociatedObject(self, &maskedCornerLayerKey, shapeLayer, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             
-            observations["frame.maskedCornerLayer"] = observe(\.frame, options: [.new, .old]) { (object, change) in
+            observations["maskedCornerLayer.frame"] = observe(\.frame, options: [.new, .old]) { (object, change) in
                 guard change.newValue?.size != change.oldValue?.size else { return }
                 object.updateMaskedLayerPath()
             }
             
-            observations["bounds.maskedCornerLayer"] = observe(\.bounds) { (object, change) in
+            observations["maskedCornerLayer.bounds"] = observe(\.bounds) { (object, change) in
                 object.updateMaskedLayerPath()
             }
             layer.insertSublayer(shapeLayer, at: 0)

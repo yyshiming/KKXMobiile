@@ -10,29 +10,36 @@ import Photos
 import PhotosUI
 
 // MARK: - ======== 导航栏 Style ========
+
 public struct NavigationBarConfiguration {
     
-    public init(backgroundImage: UIImage? = nil, backgroundColor: UIColor? = nil, barStyle: UIBarStyle = .default, itemsColor: UIColor = .kkxBlack, titleColor: UIColor = .kkxBlack, isTranslucent: Bool = true, statusBarStyle: UIStatusBarStyle = .default) {
+    public init(backgroundImage: UIImage? = nil, backgroundColor: UIColor? = nil, itemsColor: UIColor = .kkxBlack, titleTextAttributes: [NSAttributedString.Key: Any] = [:], isTranslucent: Bool = true, statusBarStyle: UIStatusBarStyle = .default, shadowImage: UIImage? = nil, shadowColor: UIColor? = nil) {
         self.backgroundImage = backgroundImage
         self.backgroundColor = backgroundColor
-        self.barStyle = barStyle
         self.itemsColor = itemsColor
-        self.titleColor = titleColor
+        self.titleTextAttributes = titleTextAttributes
         self.isTranslucent = isTranslucent
         self.statusBarStyle = statusBarStyle
+        self.shadowImage = shadowImage
+        self.shadowColor = shadowColor
     }
     
     /// 背景图片，默认nil
     public var backgroundImage: UIImage?
     /// 背景色，默认nil
     public var backgroundColor: UIColor?
-    public var barStyle = UIBarStyle.default
     /// apply to navigation items and bar button items，默认UIColor.black
     public var itemsColor = UIColor.kkxBlack
-    /// 标题颜色，默认UIColor.black
-    public var titleColor = UIColor.kkxBlack
+    /// 标题文本
+    public var titleTextAttributes: [NSAttributedString.Key: Any] = [:]
+    /// 是否透明
     public var isTranslucent = true
+    /// 状态栏
     public var statusBarStyle = UIStatusBarStyle.default
+    /// 阴影图片
+    public var shadowImage: UIImage?
+    /// 阴影颜色
+    public var shadowColor: UIColor?
     
     /// 设置导航栏为默认半透明，item、title、状态栏为黑色
     public static func `default`() -> NavigationBarConfiguration {
@@ -43,7 +50,7 @@ public struct NavigationBarConfiguration {
         var configuration = NavigationBarConfiguration()
         configuration.backgroundColor = defaultConfiguration.themeColor
         configuration.itemsColor = .white
-        configuration.titleColor = .white
+        configuration.titleTextAttributes = [.foregroundColor: UIColor.white]
         configuration.isTranslucent = false
         configuration.statusBarStyle = .lightContent
         return configuration
@@ -67,11 +74,22 @@ public struct NavigationBarConfiguration {
 
 extension UIViewController {
     
-    /// 单独设置导航栏风格，默认为空
-    public var navigationBarConfiguration: NavigationBarConfiguration? {
+    /// 单独设置导航栏风格，默认为default()
+    public var navigationBarConfiguration: NavigationBarConfiguration {
         get {
-            let style = objc_getAssociatedObject(self, &navigationBarConfigurationKey) as? NavigationBarConfiguration
-            return style
+            if let style = objc_getAssociatedObject(self, &navigationBarConfigurationKey) as? NavigationBarConfiguration {
+                return style
+            }
+            switch defaultConfiguration.navigationBarStyle {
+            case .default:
+                return .default()
+            case .background:
+                return .background()
+            case .theme:
+                return .theme()
+            case .clear:
+                return .clear()
+            }
         }
         set {
             objc_setAssociatedObject(self, &navigationBarConfigurationKey, newValue, .OBJC_ASSOCIATION_COPY_NONATOMIC)
@@ -81,46 +99,44 @@ extension UIViewController {
     // 应用设置的导航栏效果
     public func applyNavigationBarStyle(_ configuration: NavigationBarConfiguration) {
         
-        navigationController?.navigationBar.setBackgroundImage(configuration.backgroundImage, for: .default)
-        navigationController?.navigationBar.barStyle = configuration.barStyle
-        navigationController?.navigationBar.tintColor = configuration.itemsColor
-        navigationController?.navigationBar.barTintColor = configuration.backgroundColor
-        navigationController?.navigationBar.isTranslucent = configuration.isTranslucent
+        var navController: UINavigationController?
+        if self is UINavigationController {
+            navController = self as? UINavigationController
+        } else {
+            navController = navigationController
+        }
+        
+        if #available(iOS 15.0, *) {
+            let newAppearance = UINavigationBarAppearance()
+            newAppearance.backgroundImage = configuration.backgroundImage
+            newAppearance.backgroundColor = configuration.backgroundColor
+            newAppearance.shadowImage = configuration.shadowImage
+            newAppearance.shadowColor = configuration.shadowColor
+            newAppearance.titleTextAttributes = configuration.titleTextAttributes
+            
+            if let navController = self as? UINavigationController {
+                navController.navigationBar.standardAppearance = newAppearance
+                navController.navigationBar.scrollEdgeAppearance = newAppearance
+            } else {
+                navigationItem.standardAppearance = newAppearance
+                navigationItem.scrollEdgeAppearance = newAppearance
+            }
+        } else {
+            navController?.navigationBar.setBackgroundImage(configuration.backgroundImage, for: .default)
+            navController?.navigationBar.barTintColor = configuration.backgroundColor
+            setTitleAttributes(configuration.titleTextAttributes)
+        }
+        
+        navController?.navigationBar.tintColor = configuration.itemsColor
+        navController?.navigationBar.isTranslucent = configuration.isTranslucent
         kkxStatusBarStyle = configuration.statusBarStyle
-        setTitleColor(configuration.titleColor)
+        
+        children.forEach { $0.applyNavigationBarStyle(configuration) }
     }
     
     /// 设置标题颜色
-    public func setTitleColor(_ color: UIColor) {
-        let style = NSMutableParagraphStyle()
-        style.lineBreakMode = .byTruncatingMiddle
-        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: color]
-    }
-    
-    private var _configuration: NavigationBarConfiguration {
-        var configuration: NavigationBarConfiguration
-        if let config = navigationBarConfiguration {
-           configuration = config
-        } else {
-            let style = self.kkxNavigationBarStyle ?? defaultConfiguration.navigationBarStyle
-            switch style {
-            case .default:
-                configuration = .default()
-            case .theme:
-                configuration = .theme()
-            case .background:
-                configuration = .background()
-            case .clear:
-                configuration = .clear()
-            }
-        }
-        return configuration
-    }
-    
-    private func reloadNavigationBarStyle() {
-        if let _ = navigationController, self is KKXCustomNavBar {
-            applyNavigationBarStyle(_configuration)
-        }
+    public func setTitleAttributes(_ attributes: [NSAttributedString.Key: Any]) {
+        navigationController?.navigationBar.titleTextAttributes = attributes
     }
     
     /// 单独设置导航栏风格，默认为空
@@ -325,16 +341,26 @@ extension UIViewController {
             objc_setAssociatedObject(self, &additionalInsetsKey, newValue, .OBJC_ASSOCIATION_COPY_NONATOMIC)
         }
     }
+    
+    public var kkxBackItemHandler: (() -> Void)? {
+        get {
+            let handler = objc_getAssociatedObject(self, &kkxBackItemHandlerKey) as? () -> Void
+            return handler
+        }
+        set {
+            objc_setAssociatedObject(self, &kkxBackItemHandlerKey, newValue, .OBJC_ASSOCIATION_COPY_NONATOMIC)
+        }
+    }
 }
 private var isNavigationBarHiddenKey: UInt8 = 0
 private var additionalInsetsKey: UInt8 = 0
+private var kkxBackItemHandlerKey: UInt8 = 0
 
 // MARK: - ======== swizzle ========
 extension UIViewController {
     
     public class func initializeController() {
         
-        kkxSwizzleSelector(self, originalSelector: #selector(willMove(toParent:)), swizzledSelector: #selector(kkxWillMove(toParent:)))
         kkxSwizzleSelector(self, originalSelector: #selector(viewDidLoad), swizzledSelector: #selector(kkxViewDidLoad))
         kkxSwizzleSelector(self, originalSelector: #selector(viewWillAppear(_:)), swizzledSelector: #selector(kkxViewWillAppear(_:)))
         kkxSwizzleSelector(self, originalSelector: #selector(viewDidAppear(_:)), swizzledSelector: #selector(kkxViewDidAppear(_:)))
@@ -342,20 +368,12 @@ extension UIViewController {
         
         kkxSwizzleSelector(self, originalSelector: #selector(getter: preferredStatusBarStyle), swizzledSelector: #selector(kkxStatusBarUpdateStyle))
         kkxSwizzleSelector(self, originalSelector: #selector(getter: preferredStatusBarUpdateAnimation), swizzledSelector: #selector(kkxStatusBarUpdateAnimation))
-        
     }
-    
 }
 
 // MARK: - ======== Life Circle ========
 
 extension UIViewController {
-    
-    @objc private func kkxWillMove(toParent parent: UIViewController?) {
-        if let _ = kkxLastNavBarStyle, parent == nil {
-//            kkxLastNavBarStyle?()
-        }
-    }
     
     @objc private func kkxViewDidLoad() {
         if self is KKXCustomBackItem {
@@ -364,31 +382,26 @@ extension UIViewController {
                 let backItem = UIBarButtonItem(image: backItemImage, style: .plain, target: nil, action: nil)
                 backItem.imageInsets = defaultConfiguration.customBackImageInsets
                 backItem.target = self
-                backItem.action = #selector(kkxBackAction)
+                backItem.action = #selector(kkxBackItemAction)
                 navigationItem.leftBarButtonItem = backItem
             }
         }
         if self is KKXCustomCancelItemOnIpad, isPad {
             navigationItem.rightBarButtonItem = kkxCancelItem
         }
+        
         self.kkxViewDidLoad()
     }
     
     @objc private func kkxViewWillAppear(_ animated: Bool) {
-        if let _ = navigationController, self is KKXCustomNavBar {
-            let config = _configuration
-            applyNavigationBarStyle(config)
-            children.forEach { $0.applyNavigationBarStyle(config)}
+        if self is KKXCustomNavigationBar {
+            applyNavigationBarStyle(navigationBarConfiguration)
         }
         kkxIsVisible = true
         self.kkxViewWillAppear(animated)
     }
     
     @objc private func kkxViewDidAppear(_ animated: Bool) {
-        if let _ = navigationController, self is KKXCustomNavBar {
-            applyNavigationBarStyle(_configuration)
-            children.forEach { $0.applyNavigationBarStyle(_configuration)}
-        }
         self.kkxViewDidAppear(animated)
     }
     
@@ -398,13 +411,17 @@ extension UIViewController {
         self.kkxViewWillDisappear(animated)
     }
     
-    @objc private func kkxBackAction() {
-        if let navigationController = self as? UINavigationController {
-            navigationController.popViewController(animated: true)
-        } else if navigationController != nil {
-            navigationController?.popViewController(animated: true)
+    @objc private func kkxBackItemAction() {
+        if kkxBackItemHandler != nil {
+            kkxBackItemHandler?()
         } else {
-            dismiss(animated: true, completion: nil)
+            if let navigationController = self as? UINavigationController {
+                navigationController.popViewController(animated: true)
+            } else if navigationController != nil {
+                navigationController?.popViewController(animated: true)
+            } else {
+                dismiss(animated: true, completion: nil)
+            }
         }
     }
 }
@@ -478,7 +495,7 @@ extension UIViewController {
             let button = UIButton(type: .system)
             button.setImage(defaultConfiguration.defaultBackImage, for: .normal)
             button.tintColor = UIColor.kkxBlack
-            button.addTarget(self, action: #selector(kkxBackAction), for: .touchUpInside)
+            button.addTarget(self, action: #selector(kkxBackItemAction), for: .touchUpInside)
             objc_setAssociatedObject(self, &defaultBackButtonKey, button, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             return button
         }

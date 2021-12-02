@@ -7,7 +7,7 @@
 
 import UIKit
 
-open class KKXNavigationController: UINavigationController {
+open class KKXNavigationController: UINavigationController, KKXCustomNavigationBar {
 
     open override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,9 +19,9 @@ open class KKXNavigationController: UINavigationController {
         
         // 导航栏阴影
         if defaultConfiguration.isHideNavigationBarShadowImage {
-            UINavigationBar.appearance().shadowImage = UIImage()
+            navigationBar.shadowImage = UIImage()
         } else {
-            UINavigationBar.appearance().shadowImage = nil
+            navigationBar.shadowImage = nil
         }
     }
     
@@ -87,7 +87,7 @@ open class KKXNavigationController: UINavigationController {
 extension KKXNavigationController {
     
     func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
-        if viewController is KKXCustomNavBar {
+        if viewController is KKXCustomNavigationBar {
             let isHidden = viewController.isNavigationBarHidden
             navigationController.setNavigationBarHidden(isHidden, animated: animated)
         }

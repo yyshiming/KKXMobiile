@@ -28,11 +28,12 @@ extension UITextView {
                 textView?.placeholderLabel.isHidden = !text.isEmpty
                 observer.textDidChanged?(text)
             }
-            observer.observation = observe(\.text) { (object, _) in
+            let observation = observe(\.text) { (object, _) in
                 let text = object.text ?? ""
                 self.placeholderLabel.isHidden = !text.isEmpty
                 observer.textDidChanged?(text)
             }
+            observer.observations.append(observation)
             return observer
         }
         return observer
@@ -53,17 +54,15 @@ extension UITextView {
     ///   - alignment: 对齐方式
     /// - Returns: Self
     @discardableResult
-    public func placeholder(text: String,
-                            textColor: UIColor = .kkxPlaceholderText,
-                            alignment: PlaceholderAlignment = .left) -> Self {
-        self.placeholderLabel.text = text
-        self.placeholderLabel.textColor = textColor
-        self.alignment = alignment
-        self.configurePlaceholderLabel()
+    public func placeholder(text: String, textColor: UIColor = .kkxPlaceholderText, alignment: PlaceholderAlignment = .left) -> Self {
+        placeholderLabel.text = text
+        placeholderLabel.textColor = textColor
+        placeholderAlignment = alignment
+        configurePlaceholderLabel()
         return self
     }
     
-    private var alignment: PlaceholderAlignment {
+    private var placeholderAlignment: PlaceholderAlignment {
         get {
             let alignment = objc_getAssociatedObject(self, &alignmentKey) as? PlaceholderAlignment
             return alignment ?? .left
@@ -87,27 +86,41 @@ extension UITextView {
             addSubview(label)
             objc_setAssociatedObject(self, &placeholderLabelKey, label, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             
-            observations["font.TextView"] = observe(\.font) { object, change in
+            let fontObservation = observe(\.font) { object, change in
                 if let font = object.font {
-                    label.font = .systemFont(ofSize: font.pointSize)
+                    object.placeholderLabel.font = .systemFont(ofSize: font.pointSize)
                 }
             }
-            observations["frame.TextView"] = observe(\.frame, options: [.new, .old]) { object, change in
+            textObservation.observations.append(fontObservation)
+
+            let frameObservation = observe(\.frame, options: [.new, .old]) { object, change in
                 guard change.newValue?.size != change.oldValue?.size else { return }
                 self.configurePlaceholderLabel()
             }
-            observations["bounds.TextView"] = observe(\.bounds) { object, change in
+            textObservation.observations.append(frameObservation)
+
+            let boundsObservation = observe(\.bounds) { object, change in
                 self.configurePlaceholderLabel()
             }
+            textObservation.observations.append(boundsObservation)
             
+            let textContainerInsetObservation = observe(\.textContainerInset) { object, change in
+                self.configurePlaceholderLabel()
+            }
+            textObservation.observations.append(textContainerInsetObservation)
+            
+            let lineFragmentPaddingObservation = observe(\.textContainer.lineFragmentPadding) { object, change in
+                self.configurePlaceholderLabel()
+            }
+            textObservation.observations.append(lineFragmentPaddingObservation)
             return label
         }
         return label
     }
     
     private func configurePlaceholderLabel() {
-        var left = textContainerInset.left
-        let right = textContainerInset.right
+        var left = textContainer.lineFragmentPadding + textContainerInset.left
+        let right = textContainer.lineFragmentPadding + textContainerInset.right
         placeholderLabel.frame.size.width = frame.width - left - right
         placeholderLabel.sizeToFit()
                 

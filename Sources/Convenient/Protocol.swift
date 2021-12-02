@@ -11,7 +11,7 @@ import UIKit
 public protocol KKXCustomCancelItemOnIpad: NSObjectProtocol { }
 
 /// 自定义导航栏
-public protocol KKXCustomNavBar: NSObjectProtocol { }
+public protocol KKXCustomNavigationBar: NSObjectProtocol { }
 
 /// 自定义返回按钮
 public protocol KKXCustomBackItem: NSObjectProtocol { }

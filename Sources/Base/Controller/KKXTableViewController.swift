@@ -7,7 +7,7 @@
 
 import UIKit
 
-open class KKXTableViewController: UITableViewController, KKXCustomNavBar, KKXCustomBackItem {
+open class KKXTableViewController: UITableViewController, KKXCustomNavigationBar, KKXCustomBackItem {
     
     deinit {
         kkxDeinitLog()

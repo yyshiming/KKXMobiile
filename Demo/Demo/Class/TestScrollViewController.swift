@@ -13,7 +13,8 @@ class TestScrollViewController: KKXScrollViewController {
         super.loadView()
     }
     
-    override func viewDidLoad() {        
+    override func viewDidLoad() {
+        navigationBarConfiguration = .background()
         super.viewDidLoad()
         
 
@@ -29,5 +30,18 @@ class TestScrollViewController: KKXScrollViewController {
         
         textField.frame = CGRect(x: 0, y: 1000 - 45, width: 300, height: 35)
         textField.center.x = view.frame.width / 2
+        
+        
+        
+//        if #available(iOS 13.0, *) {
+//            let newAppearance = UINavigationBarAppearance()
+//            newAppearance.backgroundColor = .red
+//            newAppearance.shadowImage = UIImage()
+//            newAppearance.shadowColor = nil
+//            newAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+//            newAppearance.configureWithTransparentBackground()
+//            navigationItem.standardAppearance = newAppearance
+//            navigationItem.scrollEdgeAppearance = newAppearance
+//        }
     }
 }
