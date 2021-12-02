@@ -53,7 +53,7 @@ extension MainViewController {
         let t = dataArray[indexPath.row]
         switch t {
         case .textField:
-            navigationController?.pushViewController(TextFieldViewController(), animated: true)
+            navigationController?.pushViewController(TextFieldController(), animated: true)
         case .webView:
             
             let string = "https://h5.shop.yzvet.com"
