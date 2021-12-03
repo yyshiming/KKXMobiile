@@ -12,7 +12,8 @@ class SecondViewController: KKXScrollViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        navigationItem.title = "SecondView"
+        navigationBarConfiguration = .background()
     }
     
 

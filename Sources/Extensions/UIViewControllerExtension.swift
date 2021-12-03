@@ -139,28 +139,6 @@ extension UIViewController {
         navigationController?.navigationBar.titleTextAttributes = attributes
     }
     
-    /// 单独设置导航栏风格，默认为空
-    public var kkxNavigationBarStyle: KKX.NavigationBarStyle? {
-        get {
-            let style = objc_getAssociatedObject(self, &navigationBarStyleKey) as? KKX.NavigationBarStyle
-            return style
-        }
-        set {
-            objc_setAssociatedObject(self, &navigationBarStyleKey, newValue, .OBJC_ASSOCIATION_COPY_NONATOMIC)
-        }
-    }
-    
-    /// 上一个viewController导航栏风格
-    public var kkxLastNavBarStyle: (() -> Void)? {
-        get {
-            let style = objc_getAssociatedObject(self, &lastNavBarStyleKey) as? (() -> Void)
-            return style
-        }
-        set {
-            objc_setAssociatedObject(self, &lastNavBarStyleKey, newValue, .OBJC_ASSOCIATION_COPY_NONATOMIC)
-        }
-    }
-    
     /// 导航栏透明度，默认1.0
     public var kkxNavBarBgAlpha: CGFloat {
         get {
@@ -194,8 +172,6 @@ extension UIViewController {
     }
 }
 private var navigationBarConfigurationKey: UInt8 = 0
-private var navigationBarStyleKey: UInt8 = 0
-private var lastNavBarStyleKey: UInt8 = 0
 private var kkxNavBarBgAlphaKey: UInt8 = 0
 
 

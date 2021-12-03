@@ -15,6 +15,7 @@
 		3A7245072758772200096F2E /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7245062758772200096F2E /* SecondViewController.swift */; };
 		3A7245092758B3CD00096F2E /* KKXTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7245082758B3CD00096F2E /* KKXTextView.swift */; };
 		3A72450D2758D38D00096F2E /* TextFieldController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A72450C2758D38D00096F2E /* TextFieldController.swift */; };
+		3A72450F2759C5A600096F2E /* StackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A72450E2759C5A600096F2E /* StackViewController.swift */; };
 		3A7F075026A0158300DE21BF /* TestScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7F074F26A0158300DE21BF /* TestScrollViewController.swift */; };
 		3A9B1F9A264A926600A25136 /* UITextFieldExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9B1F99264A926600A25136 /* UITextFieldExtension.swift */; };
 		3A9B1F9C264A972300A25136 /* UITextViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9B1F9B264A972300A25136 /* UITextViewExtension.swift */; };
@@ -95,6 +96,7 @@
 		3A7245062758772200096F2E /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
 		3A7245082758B3CD00096F2E /* KKXTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KKXTextView.swift; sourceTree = "<group>"; };
 		3A72450C2758D38D00096F2E /* TextFieldController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldController.swift; sourceTree = "<group>"; };
+		3A72450E2759C5A600096F2E /* StackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackViewController.swift; sourceTree = "<group>"; };
 		3A7F074F26A0158300DE21BF /* TestScrollViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestScrollViewController.swift; sourceTree = "<group>"; };
 		3A9B1F99264A926600A25136 /* UITextFieldExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITextFieldExtension.swift; sourceTree = "<group>"; };
 		3A9B1F9B264A972300A25136 /* UITextViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITextViewExtension.swift; sourceTree = "<group>"; };
@@ -359,6 +361,7 @@
 				3AEF24F22660C916006FA9D4 /* PhotoViewController.swift */,
 				3A7F074F26A0158300DE21BF /* TestScrollViewController.swift */,
 				3A72450C2758D38D00096F2E /* TextFieldController.swift */,
+				3A72450E2759C5A600096F2E /* StackViewController.swift */,
 			);
 			path = Class;
 			sourceTree = "<group>";
@@ -493,6 +496,7 @@
 				3AEF24F32660C916006FA9D4 /* PhotoViewController.swift in Sources */,
 				3AA11794264926F40093551B /* Protocol.swift in Sources */,
 				3AA117A6264934750093551B /* Configuration.swift in Sources */,
+				3A72450F2759C5A600096F2E /* StackViewController.swift in Sources */,
 				3AA117A326492E340093551B /* KKXExtension.swift in Sources */,
 				3AEF2418265CFBED006FA9D4 /* KKXImageTransition.swift in Sources */,
 				3AA117AE264941600093551B /* NSObjectExtension.swift in Sources */,

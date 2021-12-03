@@ -18,7 +18,6 @@ class TextFieldController: KKXViewController, KKXCustomSearchView, AccessoryBarD
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print(Bundle.main.bundleIdentifier ?? "")
         navigationItem.title = "TextField"
                 
         moveView

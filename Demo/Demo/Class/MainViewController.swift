@@ -14,6 +14,7 @@ class MainViewController: KKXTableViewController {
         case webView
         case choosePhoto
         case scrollView
+        case stackView
     }
     
     private var dataArray: [CellType] = []
@@ -50,19 +51,21 @@ extension MainViewController {
 extension MainViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        var controller: UIViewController
         let t = dataArray[indexPath.row]
         switch t {
         case .textField:
-            navigationController?.pushViewController(TextFieldController(), animated: true)
+            controller = TextFieldController()
         case .webView:
             let string = "https://www.baidu.com"
-            let controller = KKXWebViewController(url: URL(string: string))
-            navigationController?.pushViewController(controller, animated: true)
+            controller = KKXWebViewController(url: URL(string: string))
         case .choosePhoto:
-            navigationController?.pushViewController(PhotoViewController(), animated: true)
+            controller = PhotoViewController()
         case .scrollView:
-            let controller = TestScrollViewController()
-            navigationController?.pushViewController(controller, animated: true)
+            controller = TestScrollViewController()
+        case .stackView:
+            controller = StackViewController()
         }
+        navigationController?.pushViewController(controller, animated: true)
     }
 }
