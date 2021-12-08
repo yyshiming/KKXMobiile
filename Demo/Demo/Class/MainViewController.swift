@@ -51,14 +51,17 @@ extension MainViewController {
 extension MainViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        var controller: UIViewController
+        var controller: UIViewController?
         let t = dataArray[indexPath.row]
         switch t {
         case .textField:
             controller = TextFieldController()
         case .webView:
             let string = "https://www.baidu.com"
-            controller = KKXWebViewController(url: URL(string: string))
+            if let url = URL(string: string) {
+                let req = URLRequest(url: url)
+                controller = KKXWebViewController(request: req)
+            }
         case .choosePhoto:
             controller = PhotoViewController()
         case .scrollView:
@@ -66,6 +69,8 @@ extension MainViewController {
         case .stackView:
             controller = StackViewController()
         }
-        navigationController?.pushViewController(controller, animated: true)
+        if let vc = controller {
+            navigationController?.pushViewController(vc, animated: true)
+        }
     }
 }

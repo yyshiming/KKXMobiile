@@ -57,18 +57,16 @@ open class KKXWebViewController: KKXViewController {
         }
     }
     
-    open var url: URL? {
-        didSet {
-            load(url)
-        }
-    }
+    open var url: URL?
+    
+    open var request: URLRequest?
+    
+    open var fileURL: URL?
+    open var readAccessURL: URL?
     
     /// html字符串
-    open var htmlString: String? {
-        didSet {
-            loadHTMLString(htmlString)
-        }
-    }
+    open var htmlString: String?
+    open var baseURL: URL?
     
     /// url拦截和回调
     public var intercepts: [String: WebViewInterceptCallback] {
@@ -76,17 +74,21 @@ open class KKXWebViewController: KKXViewController {
     }
     
     // MARK: -------- Public Function --------
-
-    open func loadHTMLString(_ string: String?) {
-        if let htmlString = string {
-            webView.loadHTMLString(htmlString, baseURL: URL(fileURLWithPath: Bundle.main.bundlePath))
-        }
+    
+    @discardableResult
+    open func load(_ request: URLRequest) -> WKNavigation? {
+        webView.load(request)
     }
     
-    open func load(_ url: URL?) {
-        if let aUrl = url {
-            webView.load(URLRequest(url: aUrl))
-        }
+    @available(iOS 9.0, *)
+    @discardableResult
+    open func loadFileURL(_ url: URL, allowingReadAccessTo readAccessURL: URL) -> WKNavigation? {
+        webView.loadFileURL(url, allowingReadAccessTo: readAccessURL)
+    }
+    
+    @discardableResult
+    open func loadHTMLString(_ string: String, baseURL: URL? = nil)-> WKNavigation? {
+        webView.loadHTMLString(string, baseURL: baseURL)
     }
     
     open func reload() {
@@ -171,14 +173,25 @@ open class KKXWebViewController: KKXViewController {
         self.init(nibName: nil, bundle: nil)
     }
     
-    public init(htmlString: String?) {
-        super.init(nibName: nil, bundle: nil)
-        self.htmlString = htmlString
-    }
-    
     public init(url: URL?) {
         super.init(nibName: nil, bundle: nil)
         self.url = url
+    }
+    
+    public init(request: URLRequest?) {
+        super.init(nibName: nil, bundle: nil)
+        self.request = request
+    }
+    
+    public init(fileURL: URL, allowingReadAccessTo readAccessURL: URL) {
+        super.init(nibName: nil, bundle: nil)
+        self.fileURL = fileURL
+        self.readAccessURL = readAccessURL
+    }
+    
+    public init(htmlString: String?, baseURL: URL? = nil) {
+        super.init(nibName: nil, bundle: nil)
+        self.htmlString = htmlString
     }
     
     public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -211,11 +224,16 @@ open class KKXWebViewController: KKXViewController {
             webView.configuration.userContentController.addUserScript(userScript)
         }
         
-        if url != nil {
-            load(url)
+        if let req = request {
+            load(req)
         }
-        else if htmlString != nil {
-            loadHTMLString(htmlString)
+        else if let url = url {
+            load(URLRequest(url: url))
+        } else if let string = htmlString {
+            loadHTMLString(string, baseURL: baseURL)
+        } else if let fileURL = fileURL,
+                    let readAccessURL = readAccessURL {
+            loadFileURL(fileURL, allowingReadAccessTo: readAccessURL)
         }
         
         webViewTitleObservation = observe(\.webView.title) { object, _ in
