@@ -216,12 +216,12 @@ open class KKXWebViewController: KKXViewController {
         configureProgressView()
         
         if !cookies.isEmpty {
-            var source = "document.cookie="
-            cookies.forEach { (key, value) in
-                source.append("'\(key)=\(value)';")
+            for (key, value) in cookies {
+                let source = "document.cookie='\(key)=\(value)';"
+                let userScript = WKUserScript(source: source, injectionTime: .atDocumentStart, forMainFrameOnly: false)
+                kkxPrint(source)
+                webView.configuration.userContentController.addUserScript(userScript)
             }
-            let userScript = WKUserScript(source: source, injectionTime: .atDocumentStart, forMainFrameOnly: false)
-            webView.configuration.userContentController.addUserScript(userScript)
         }
         
         if let req = request {
