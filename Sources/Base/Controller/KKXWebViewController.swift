@@ -8,7 +8,7 @@
 import UIKit
 import WebKit
 
-public typealias WebViewInterceptCallback = (KKXWebViewController) -> Void
+public typealias WebViewInterceptCallback = (KKXWebViewController, URL?) -> Void
 
 open class KKXWebViewController: KKXViewController {
     
@@ -399,9 +399,10 @@ extension KKXWebViewController: WKNavigationDelegate {
     
     /// 发送请求之前，决定是否跳转
     public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Swift.Void) {
-        let urlString = navigationAction.request.url?.absoluteString ?? ""
+        let requestUrl = navigationAction.request.url
+        let urlString = requestUrl?.absoluteString ?? ""
         if let callback = interceptCallback(for: urlString) {
-            callback(self)
+            callback(self, requestUrl)
             decisionHandler(.cancel)
         } else {
             decisionHandler(.allow)
@@ -410,9 +411,10 @@ extension KKXWebViewController: WKNavigationDelegate {
     
     @available(iOS 13.0, *)
     public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, preferences: WKWebpagePreferences, decisionHandler: @escaping (WKNavigationActionPolicy, WKWebpagePreferences) -> Void) {
-        let urlString = navigationAction.request.url?.absoluteString ?? ""
+        let requestUrl = navigationAction.request.url
+        let urlString = requestUrl?.absoluteString ?? ""
         if let callback = interceptCallback(for: urlString) {
-            callback(self)
+            callback(self, requestUrl)
             decisionHandler(.cancel, preferences)
         } else {
             decisionHandler(.allow, preferences)
