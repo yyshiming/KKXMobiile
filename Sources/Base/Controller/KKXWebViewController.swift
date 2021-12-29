@@ -113,8 +113,8 @@ open class KKXWebViewController: KKXViewController {
     }
     
     @discardableResult
-    public func addIntercept(with urlString: String, callback: @escaping WebViewInterceptCallback) -> Self {
-        _intercepts[urlString] = callback
+    public func addIntercept(for prefix: String, callback: @escaping WebViewInterceptCallback) -> Self {
+        _intercepts[prefix] = callback
         return self
     }
     
@@ -367,10 +367,10 @@ open class KKXWebViewController: KKXViewController {
         navigationItem.rightBarButtonItems = rightItems
     }
     
-    private func interceptCallback(_ urlString: String) -> WebViewInterceptCallback? {
+    private func interceptCallback(for urlString: String) -> WebViewInterceptCallback? {
         var callback: WebViewInterceptCallback?
         for (key, value) in _intercepts {
-            if urlString.contains(key) {
+            if urlString.hasPrefix(key) {
                 callback = value
                 break
             }
@@ -400,7 +400,7 @@ extension KKXWebViewController: WKNavigationDelegate {
     /// 发送请求之前，决定是否跳转
     public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Swift.Void) {
         let urlString = navigationAction.request.url?.absoluteString ?? ""
-        if let callback = interceptCallback(urlString) {
+        if let callback = interceptCallback(for: urlString) {
             callback(self)
             decisionHandler(.cancel)
         } else {
@@ -411,7 +411,7 @@ extension KKXWebViewController: WKNavigationDelegate {
     @available(iOS 13.0, *)
     public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, preferences: WKWebpagePreferences, decisionHandler: @escaping (WKNavigationActionPolicy, WKWebpagePreferences) -> Void) {
         let urlString = navigationAction.request.url?.absoluteString ?? ""
-        if let callback = interceptCallback(urlString) {
+        if let callback = interceptCallback(for: urlString) {
             callback(self)
             decisionHandler(.cancel, preferences)
         } else {

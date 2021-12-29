@@ -15,7 +15,7 @@ class SecondViewController: KKXScrollViewController {
         navigationItem.title = "SecondView"
         navigationBarConfiguration = .background()
         
-        view.kkxEmptyDataView.titleLabel?.text = "还没有数据"
+        view.kkxEmptyDataView.label?.text = "还没有数据"
         view.kkxShowEmptyDataView = true
         view.kkxLoading = true
     }
