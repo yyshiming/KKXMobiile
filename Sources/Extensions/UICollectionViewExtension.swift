@@ -7,6 +7,21 @@
 
 import UIKit
 
+// MARK: - ======== backgroundView ========
+extension UICollectionView {
+    
+    public var kkxBackgroundView: UIView {
+        guard let bgView = objc_getAssociatedObject(self, &kkxBackgroundViewKey) as? UIView else {
+            let bgView = UIView()
+            backgroundView = bgView
+            objc_setAssociatedObject(self, &kkxBackgroundViewKey, bgView, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            return bgView
+        }
+        return bgView
+    }
+}
+private var kkxBackgroundViewKey: UInt8 = 0
+
 // MARK: - ======== UICollectionView注册、复用 ========
 extension UICollectionView {
 
