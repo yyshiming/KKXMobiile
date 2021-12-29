@@ -7,6 +7,47 @@
 
 import UIKit
 
+public enum KKXUserInterfaceStyle : Int {
+    
+    case unspecified = 0
+    
+    case light = 1
+
+    case dark = 2
+}
+
+extension UIView {
+    open var kkxUserInterfaceStyle: KKXUserInterfaceStyle {
+        get {
+            if #available(iOS 13.0, *) {
+                switch overrideUserInterfaceStyle {
+                case .light:
+                    return .light
+                case .dark:
+                    return .dark
+                default:
+                    return .unspecified
+                }
+            } else {
+                return .light
+            }
+        }
+        set {
+            if #available(iOS 13.0, *) {
+                switch newValue {
+                case .unspecified:
+                    overrideUserInterfaceStyle = .unspecified
+                case .light:
+                    overrideUserInterfaceStyle = .light
+                case .dark:
+                    overrideUserInterfaceStyle = .dark
+                }
+            }
+        }
+    }
+}
+private var kkxUserInterfaceStyleKey: UInt8 = 0
+
 // MARK: - ======== 系统菊花动画 ========
 extension UIView {
     
@@ -42,7 +83,7 @@ extension UIView {
             indicatorView.translatesAutoresizingMaskIntoConstraints = false
             let attributes: [NSLayoutConstraint.Attribute] = [.centerX, .centerY, .width, .height]
             for attribute in attributes {
-                NSLayoutConstraint(item: indicatorView, attribute: attribute, relatedBy: .equal, toItem: self, attribute: attribute, multiplier: 1.0, constant: 0.0).isActive = true
+                NSLayoutConstraint(item: indicatorView, attribute: attribute, relatedBy: .equal, toItem: safeAreaLayoutGuide, attribute: attribute, multiplier: 1.0, constant: 0.0).isActive = true
             }
             objc_setAssociatedObject(self, &kkxLoadingViewKey, indicatorView, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             return indicatorView
@@ -514,6 +555,18 @@ extension UIView {
         }
         if let newHeight = height {
             newFrame.size.height = newHeight
+        }
+        frame = newFrame
+        return self
+    }
+    
+    public func frame(origin: CGPoint? = nil, size: CGSize? = nil) -> Self {
+        var newFrame = frame
+        if let newOrigin = origin {
+            newFrame.origin = newOrigin
+        }
+        if let newSize = size {
+            newFrame.size = newSize
         }
         frame = newFrame
         return self
