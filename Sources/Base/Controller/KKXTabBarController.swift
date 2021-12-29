@@ -9,6 +9,10 @@ import UIKit
 
 open class KKXTabBarController: UITabBarController {
 
+    deinit {
+        kkxDeinitLog()
+    }
+    
     open override func viewDidLoad() {
         super.viewDidLoad()
         

@@ -56,14 +56,14 @@ public class KKXEmptyDataView: UIView {
         return _imageView
     }
     
-    public var titleLabel: UILabel? {
-        if _titleLabel == nil {
+    public var label: UILabel? {
+        if _label == nil {
             let label = UILabel()
             label.numberOfLines = 0
             label.font = UIFont.systemFont(ofSize: 18.0)
             label.textColor = UIColor.kkxSecondary
             label.translatesAutoresizingMaskIntoConstraints = false
-            _titleLabel = label
+            _label = label
             if let _ = _imageView {
                 stackView.insertArrangedSubview(label, at: 1)
             }
@@ -71,7 +71,7 @@ public class KKXEmptyDataView: UIView {
                 stackView.insertArrangedSubview(label, at: 0)
             }
         }
-        return _titleLabel
+        return _label
     }
     
     public var button: UIButton? {
@@ -99,7 +99,7 @@ public class KKXEmptyDataView: UIView {
     private var centerYConstraint: NSLayoutConstraint?
     
     private var _imageView: UIImageView?
-    private var _titleLabel: UILabel?
+    private var _label: UILabel?
     private var _button: UIButton?
     
     private var contentView = UIView()
@@ -200,23 +200,26 @@ extension UIView {
             else {
                 let view = KKXEmptyDataView()
                 insertSubview(view, at: 0)
-                view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-                view.frame = bounds
+                view.translatesAutoresizingMaskIntoConstraints = false
+                let attributes: [NSLayoutConstraint.Attribute] = [.centerX, .centerY, .width, .height]
+                for attribute in attributes {
+                    NSLayoutConstraint(item: view, attribute: attribute, relatedBy: .equal, toItem: safeAreaLayoutGuide, attribute: attribute, multiplier: 1.0, constant: 0.0).isActive = true
+                }
                 view.isHidden = true
                 
                 let config = KKXEmptyDataView.Configuration.default
                 view.spacing = config.spacing
                 view.offset = config.offset
-                view.titleLabel?.numberOfLines = config.numberOfLines
+                view.label?.numberOfLines = config.numberOfLines
                 
                 if let title = config.title {
-                   view.titleLabel?.text = title
+                   view.label?.text = title
                 }
                 if let titleColor = config.titleColor {
-                   view.titleLabel?.textColor = titleColor
+                   view.label?.textColor = titleColor
                 }
                 if let font = config.titleFont {
-                   view.titleLabel?.font = font
+                   view.label?.font = font
                 }
                 
                 if let buttonTitle = config.buttonTitle {
@@ -258,23 +261,26 @@ extension UIView {
             else {
                 let view = KKXEmptyDataView()
                 insertSubview(view, at: 0)
-                view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-                view.frame = bounds
+                view.translatesAutoresizingMaskIntoConstraints = false
+                let attributes: [NSLayoutConstraint.Attribute] = [.centerX, .centerY, .width, .height]
+                for attribute in attributes {
+                    NSLayoutConstraint(item: view, attribute: attribute, relatedBy: .equal, toItem: safeAreaLayoutGuide, attribute: attribute, multiplier: 1.0, constant: 0.0).isActive = true
+                }
                 view.isHidden = true
                 
                 let config = KKXEmptyDataView.Configuration.failure
                 view.spacing = config.spacing
                 view.offset = config.offset
-                view.titleLabel?.numberOfLines = config.numberOfLines
+                view.label?.numberOfLines = config.numberOfLines
                 
                 if let title = config.title {
-                   view.titleLabel?.text = title
+                   view.label?.text = title
                 }
                 if let titleColor = config.titleColor {
-                   view.titleLabel?.textColor = titleColor
+                   view.label?.textColor = titleColor
                 }
                 if let font = config.titleFont {
-                   view.titleLabel?.font = font
+                   view.label?.font = font
                 }
                 if let buttonTitle = config.buttonTitle {
                     view.button?.setTitle(buttonTitle, for: .normal)

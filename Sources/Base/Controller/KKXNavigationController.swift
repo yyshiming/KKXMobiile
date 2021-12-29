@@ -9,6 +9,10 @@ import UIKit
 
 open class KKXNavigationController: UINavigationController, KKXCustomNavigationBar {
 
+    deinit {
+        kkxDeinitLog()
+    }
+    
     open override func viewDidLoad() {
         super.viewDidLoad()
         
