@@ -25,10 +25,21 @@ class MainViewController: KKXTableViewController {
         
         navigationItem.title = "KKXMobile"
         
+        let rightItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(rightItemAction))
+        navigationItem.rightBarButtonItem = rightItem
+        
         tableView.kkx_register(UITableViewCell.self)
         tableView.rowHeight = 44
         
         dataArray = CellType.allCases
+        
+    }
+    
+    @objc private func rightItemAction() {
+        if let url = URL(string: "https://cert.yizhivet.com"),
+            UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url)
+        }
     }
 }
 
