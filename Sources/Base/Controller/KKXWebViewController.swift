@@ -8,7 +8,7 @@
 import UIKit
 import WebKit
 
-public typealias WebViewInterceptCallback = (KKXWebViewController, URL?) -> Void
+public typealias WebViewInterceptCallback = (KKXWebViewController, WKNavigationAction) -> WKNavigationActionPolicy
 
 open class KKXWebViewController: KKXViewController {
     
@@ -402,8 +402,8 @@ extension KKXWebViewController: WKNavigationDelegate {
         let requestUrl = navigationAction.request.url
         let urlString = requestUrl?.absoluteString ?? ""
         if let callback = interceptCallback(for: urlString) {
-            callback(self, requestUrl)
-            decisionHandler(.cancel)
+            let actionPolicy = callback(self, navigationAction)
+            decisionHandler(actionPolicy)
         } else {
             decisionHandler(.allow)
         }
@@ -414,8 +414,8 @@ extension KKXWebViewController: WKNavigationDelegate {
         let requestUrl = navigationAction.request.url
         let urlString = requestUrl?.absoluteString ?? ""
         if let callback = interceptCallback(for: urlString) {
-            callback(self, requestUrl)
-            decisionHandler(.cancel, preferences)
+            let actionPolicy = callback(self, navigationAction)
+            decisionHandler(actionPolicy, preferences)
         } else {
             decisionHandler(.allow, preferences)
         }
