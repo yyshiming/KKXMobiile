@@ -54,7 +54,6 @@
 		3AA117C6264947660093551B /* KKXCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA117C5264947660093551B /* KKXCollectionViewController.swift */; };
 		3AA117C8264947A00093551B /* KKXWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA117C7264947A00093551B /* KKXWebViewController.swift */; };
 		3AA117CA264949F90093551B /* KKXFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA117C9264949F90093551B /* KKXFlowLayout.swift */; };
-		3AC03103277D8F63004BBC69 /* Protocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC03102277D8F63004BBC69 /* Protocol.swift */; };
 		3AE07AD8273E6F5800A6BA0F /* KKXInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE07AD7273E6F5800A6BA0F /* KKXInputView.swift */; };
 		3AE987AA264B7AC300A4953D /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE987A9264B7AC300A4953D /* MainViewController.swift */; };
 		3AEF2410265CFB32006FA9D4 /* KKXAlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEF240F265CFB32006FA9D4 /* KKXAlertManager.swift */; };
@@ -138,7 +137,6 @@
 		3AA117C5264947660093551B /* KKXCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KKXCollectionViewController.swift; sourceTree = "<group>"; };
 		3AA117C7264947A00093551B /* KKXWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KKXWebViewController.swift; sourceTree = "<group>"; };
 		3AA117C9264949F90093551B /* KKXFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KKXFlowLayout.swift; sourceTree = "<group>"; };
-		3AC03102277D8F63004BBC69 /* Protocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocol.swift; sourceTree = "<group>"; };
 		3AE07AD7273E6F5800A6BA0F /* KKXInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KKXInputView.swift; sourceTree = "<group>"; };
 		3AE987A9264B7AC300A4953D /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		3AEF240F265CFB32006FA9D4 /* KKXAlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KKXAlertManager.swift; sourceTree = "<group>"; };
@@ -235,7 +233,6 @@
 				3AA11795264928220093551B /* DispatchQueueExtension.swift */,
 				3AA117A226492E340093551B /* KKXExtension.swift */,
 				3AA117AD264941600093551B /* NSObjectExtension.swift */,
-				3AC03102277D8F63004BBC69 /* Protocol.swift */,
 				3AA11797264928570093551B /* StringExtension.swift */,
 				3AA117B32649432C0093551B /* TimeIntervalExtension.swift */,
 				3AA117882649199F0093551B /* TimerExtension.swift */,
@@ -508,7 +505,6 @@
 				3A071EDF26676DFC00AC5221 /* KKXTextLabelView.swift in Sources */,
 				3A7245092758B3CD00096F2E /* KKXTextView.swift in Sources */,
 				3AA117C0264946A20093551B /* KKXTabBarController.swift in Sources */,
-				3AC03103277D8F63004BBC69 /* Protocol.swift in Sources */,
 				3AA1178F264925B30093551B /* UIViewExtension.swift in Sources */,
 				3AA117CA264949F90093551B /* KKXFlowLayout.swift in Sources */,
 				3AEF2438265CFCCE006FA9D4 /* KKXScanNetAnimation.swift in Sources */,
