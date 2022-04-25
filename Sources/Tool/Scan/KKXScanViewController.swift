@@ -214,7 +214,7 @@ open class KKXScanViewController: KKXViewController {
         selectPhoto(from: .photoLibrary) { [weak self](info) in
             guard let self = self else { return }
             
-            let image = info[.editedImage] as? UIImage
+            let image = info[.originalImage] as? UIImage
             let result = KKXScanWrapper.recognizeQRImage(image)
             
             let string = result.first?.string

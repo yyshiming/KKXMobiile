@@ -20,6 +20,16 @@ open class KKXWebViewController: KKXViewController {
     /// 导航栏下方进度条
     public let progressView = UIProgressView(progressViewStyle: .bar)
         
+    /// webView.scrollView.contentInsetAdjustmentBehavior
+    @available(iOS 11.0, *)
+    open var adjustmentBehavior: UIScrollView.ContentInsetAdjustmentBehavior = .automatic {
+        didSet {
+            if isViewLoaded {
+                webView.scrollView.contentInsetAdjustmentBehavior = adjustmentBehavior
+            }
+        }
+    }
+    
     /// 给H5界面传cookies
     open var cookies: [String: Any] = [:]
 
@@ -35,7 +45,9 @@ open class KKXWebViewController: KKXViewController {
     /// 是否显示进度条，默认true
     open var showProgress: Bool = true {
         didSet {
-            progressView.isHidden = !showProgress
+            if isViewLoaded {
+                progressView.isHidden = !showProgress
+            }
         }
     }
     /// 是否显示取消按钮，默认false
@@ -210,6 +222,8 @@ open class KKXWebViewController: KKXViewController {
         
     open override func viewDidLoad() {
         super.viewDidLoad()
+        
+        webView.scrollView.contentInsetAdjustmentBehavior = adjustmentBehavior
         
         configureSubviews()
         configureNavigationBar()
