@@ -91,9 +91,14 @@ open class KKXScrollViewController: KKXViewController, UIGestureRecognizerDelega
     
     @objc private func kkxTapAction() {
         view.endEditing(true)
+        onTap()
     }
     
-    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+    open func onTap() {
+        
+    }
+    
+    open func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         if touch.view == scrollView || touch.view == contentView {
             return true
         }

@@ -19,6 +19,8 @@
 		3A7F075026A0158300DE21BF /* TestScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7F074F26A0158300DE21BF /* TestScrollViewController.swift */; };
 		3A9B1F9A264A926600A25136 /* UITextFieldExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9B1F99264A926600A25136 /* UITextFieldExtension.swift */; };
 		3A9B1F9C264A972300A25136 /* UITextViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9B1F9B264A972300A25136 /* UITextViewExtension.swift */; };
+		3AA00138284910A5006844D9 /* KKXBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA00137284910A5006844D9 /* KKXBadgeView.swift */; };
+		3AA0013A284910AE006844D9 /* KKXExpandButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA00139284910AE006844D9 /* KKXExpandButton.swift */; };
 		3AA117732649194C0093551B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA117722649194C0093551B /* AppDelegate.swift */; };
 		3AA1177A2649194C0093551B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3AA117782649194C0093551B /* Main.storyboard */; };
 		3AA1177C2649194E0093551B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3AA1177B2649194E0093551B /* Assets.xcassets */; };
@@ -100,6 +102,8 @@
 		3A7F074F26A0158300DE21BF /* TestScrollViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestScrollViewController.swift; sourceTree = "<group>"; };
 		3A9B1F99264A926600A25136 /* UITextFieldExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITextFieldExtension.swift; sourceTree = "<group>"; };
 		3A9B1F9B264A972300A25136 /* UITextViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITextViewExtension.swift; sourceTree = "<group>"; };
+		3AA00137284910A5006844D9 /* KKXBadgeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KKXBadgeView.swift; sourceTree = "<group>"; };
+		3AA00139284910AE006844D9 /* KKXExpandButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KKXExpandButton.swift; sourceTree = "<group>"; };
 		3AA1176F2649194C0093551B /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3AA117722649194C0093551B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3AA117792649194C0093551B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -267,6 +271,8 @@
 		3AA1179D26492CD80093551B /* View */ = {
 			isa = PBXGroup;
 			children = (
+				3AA00139284910AE006844D9 /* KKXExpandButton.swift */,
+				3AA00137284910A5006844D9 /* KKXBadgeView.swift */,
 				3AFCF1A2264A4AAC0026B5EB /* KKXCollectionViewCell.swift */,
 				3A071EEF2668BC1000AC5221 /* KKXCountingLabel.swift */,
 				3AA1179E26492CFE0093551B /* KKXEmptyDataView.swift */,
@@ -482,6 +488,7 @@
 				3AFCF19E264A2DBE0026B5EB /* KKXPreferences.swift in Sources */,
 				3AA117892649199F0093551B /* TimerExtension.swift in Sources */,
 				3AA1178D264924880093551B /* UICollectionViewCellExtension.swift in Sources */,
+				3AA0013A284910AE006844D9 /* KKXExpandButton.swift in Sources */,
 				3AFCF19B264A22540026B5EB /* BundleExtension.swift in Sources */,
 				3AA11791264926260093551B /* UIColorExtension.swift in Sources */,
 				3A7245072758772200096F2E /* SecondViewController.swift in Sources */,
@@ -502,6 +509,7 @@
 				3AA117AE264941600093551B /* NSObjectExtension.swift in Sources */,
 				3AEF2427265CFC2D006FA9D4 /* KKXSearchKeysLayout.swift in Sources */,
 				3AA117AA264940DC0093551B /* UIDeviceExtension.swift in Sources */,
+				3AA00138284910A5006844D9 /* KKXBadgeView.swift in Sources */,
 				3A071EDF26676DFC00AC5221 /* KKXTextLabelView.swift in Sources */,
 				3A7245092758B3CD00096F2E /* KKXTextView.swift in Sources */,
 				3AA117C0264946A20093551B /* KKXTabBarController.swift in Sources */,

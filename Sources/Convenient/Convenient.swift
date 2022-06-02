@@ -64,6 +64,19 @@ public func kkxCall(_ phoneNumber: String) {
     }
 }
 
+/// 根据金额（分）返回format
+/// - Parameter price: 金额（分）
+/// - Returns: format
+public func kkxFormat(for price: Int) -> String {
+    var format = "%.2f"
+    if (price % 100 == 0) {
+        format = "%.0f"
+    } else if (price % 10 == 0) {
+        format = "%.1f"
+    }
+    return format
+}
+
 /// 注册推送通知
 public func registerRemoteNotifications(_ delegate: UNUserNotificationCenterDelegate) {
     if #available(iOS 10.0, *) {
