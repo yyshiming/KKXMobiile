@@ -507,15 +507,15 @@ extension KKXWebViewController: WKNavigationDelegate {
         decisionHandler(false)
     }
     
-    @available(iOS 15.0, *)
-    public func webView(_ webView: WKWebView, navigationAction: WKNavigationAction, didBecome download: WKDownload) {
-        
-    }
-    
-    @available(iOS 15.0, *)
-    public func webView(_ webView: WKWebView, navigationResponse: WKNavigationResponse, didBecome download: WKDownload) {
-        
-    }
+//    @available(iOS 14.5, *)
+//    public func webView(_ webView: WKWebView, navigationAction: WKNavigationAction, didBecome download: WKDownload) {
+//        
+//    }
+//    
+//    @available(iOS 14.5, *)
+//    public func webView(_ webView: WKWebView, navigationResponse: WKNavigationResponse, didBecome download: WKDownload) {
+//        
+//    }
 }
 
 // MARK: ======== WKUIDelegate ========
